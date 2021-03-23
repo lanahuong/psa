@@ -1,0 +1,9 @@
+{
+  "field" : {
+    "image" : {},
+    "dimensions" : [100,100]
+  },
+  "wave" : {
+    "type" : "gaussian"
+  }
+}
