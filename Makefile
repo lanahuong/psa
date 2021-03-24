@@ -1,5 +1,5 @@
 #Compiler config for the main target
-CC = g++ -std=c++11 -fopenmp
+CC = g++ -std=c++11
 LD = $(CC) -std=c++11 -larmadillo
 CFLAGS = -Wall -Wextra -O2 -I /usr/local/include -march=native -mtune=native
 #CFLAGS += -Wall -Wextra -Werror -pedantic -ansi -Wshadow -Wdouble-promotion -Wundef -fno-common -Wconversion -Wunused-parameter
@@ -20,7 +20,7 @@ FUSED_GTEST_TMP_DIR = tmp
 GTEST_SRC = gtest
 
 #Names of the targets
-TARGET = $(BINDIR)/nuclearDensity
+TARGET = $(BINDIR)/solver
 TEST_TARGET = $(BINDIR)/tests
 
 all : makedirs $(TARGET)
