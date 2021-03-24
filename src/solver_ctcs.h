@@ -1,11 +1,7 @@
 #ifndef PROJET_PSA_SOLVER_CTCS_H
 #define PROJET_PSA_SOLVER_CTCS_H
 
-#include <armadillo>
-
-constexpr double epsilon = 10e-10;
-constexpr double reduced_planck = 6.582119514 * 10e-22;
-constexpr double neutron_mass = 1.674927471 * 10e-27;
+#include "solver.h"
 
 using cx = std::complex<double>;
 

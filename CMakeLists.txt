@@ -12,12 +12,12 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 
 
 #MAIN
-add_executable(main src/main.cpp src/solver_ctcs.cpp src/solver_ctcs.h)
-target_link_libraries(main ${ARMADILLO_LIBRARIES})
-target_compile_options(main ${COMPILE_OPTIONS})
+#add_executable(main src/solver_ctcs.cpp src/solver_ctcs.h src/solver.cpp src/solver.h)
+#target_link_libraries(main ${ARMADILLO_LIBRARIES})
+#target_compile_options(main ${COMPILE_OPTIONS})
 
 #TESTS
-add_executable(tests tests/tests_ctcs.cpp src/solver_ctcs.cpp src/solver_ctcs.h)
+add_executable(tests tests/tests_ctcs.cpp src/solver_ctcs.cpp src/solver_ctcs.h src/solver.cpp src/solver.h)
 target_link_libraries(tests ${ARMADILLO_LIBRARIES})
 target_compile_options(tests ${COMPILE_OPTIONS})
 target_link_libraries(tests gtest_main)
