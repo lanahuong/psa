@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 project(projet_psa)
 set(CMAKE_CXX_STANDARD 11)
-set(COMPILE_OPTIONS PRIVATE -pedantic -ansi -Wshadow -Wdouble-promotion -Wundef -fno-common  -Wunused-parameter -Winit-self -Wuninitialized -Wmissing-declarations -Woverloaded-virtual -Wold-style-cast )
+set(COMPILE_OPTIONS PRIVATE -Wshadow -Wdouble-promotion -Wundef -fno-common -Winit-self -Wuninitialized -Wmissing-declarations -Woverloaded-virtual)
 #-Wconversion
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -march=native -mtune=native -fopenmp -Ofast -flto")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -march=native -mtune=native -Ofast -flto")
 
 #Armadillo
 find_package(Armadillo REQUIRED)

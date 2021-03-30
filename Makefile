@@ -1,10 +1,10 @@
 #Compiler config for the main target
 CC = g++ -std=c++11
-LD = $(CC) -std=c++11 -larmadillo
+LD = $(CC)
 CFLAGS = -Wall -Wextra -O2 -I /usr/local/include -march=native -mtune=native
 #CFLAGS += -Wall -Wextra -Werror -pedantic -ansi -Wshadow -Wdouble-promotion -Wundef -fno-common -Wconversion -Wunused-parameter
 TEST_CFLAGS += $(CFLAGS) -I$(FUSED_GTEST_TMP_DIR) -larmadillo -Og -DGTEST_HAS_PTHREAD=0
-LDFLAGS = -Wall -Wextra -larmadillo
+LDFLAGS = -larmadillo
 
 #Modules to consider in the build. foo.cpp will be foo.
 include tests/modules
@@ -20,7 +20,7 @@ FUSED_GTEST_TMP_DIR = tmp
 GTEST_SRC = gtest
 
 #Names of the targets
-TARGET = $(BINDIR)/solver
+TARGET = $(BINDIR)/solver.so
 TEST_TARGET = $(BINDIR)/tests
 
 all : makedirs $(TARGET)
@@ -40,7 +40,7 @@ ALL_HEADERS = $(addprefix $(SRCDIR)/, $(ORPHANED_HEADERS:=.h))
 ALL_SOURCES = $(SOURCES) $(MAIN_SRC)
 
 $(TARGET) : $(ALL_OBJECTS) $(ALL_SOURCES) $(ALL_HEADERS)
-	$(LD) $(LDFLAGS) -o $@ $(ALL_OBJECTS)
+	$(CC) $(LDFLAGS) -o $@ $(ALL_OBJECTS)
 
 $(MAIN_OBJ): obj/%.o : src/%.cpp $(MAIN_SRC)
 	$(CC) $(CFLAGS) -c -o $@ $<
