@@ -7,8 +7,8 @@
   },
   "wave" : {
     "type" : "gaussian",
-    "CoordX" : [0,0],
-    "Width"  : 0,
+    "Coord" : [0,0],
+    "Width"  : 10,
     "AnguFreq" : 1000
   }
 }

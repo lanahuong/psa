@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import gaussian
 import json, os.path, argparse, sys
 
 def not_implemented():
@@ -43,14 +43,15 @@ def preprocessing(args):
         sys.exit("Missing 'dimensions' in field description")
 
     dimensions = field["dimensions"]
-    if "image" in field:
-        not_implemented()
+
+    #if "image" in field:
+        #not_implemented()
         # Construct field from image
-    elif "formula" in field:
-        not_implemented()
+    #elif "formula" in field:
+        #not_implemented()
         # Construct field from formula
-    else:
-        sys.exit("Unknown field description use image or formula")
+    #else:
+        #sys.exit("Unknown field description use image or formula")
 
     # Construct wave
     if "type" not in wave:
@@ -58,7 +59,7 @@ def preprocessing(args):
 
     # Construct wave
     if wave["type"] == "gaussian":
-        not_implemented()
+        initGauss = gaussian.createMapGaussian(wave , field)
         # Construct gaussian wave
     elif wave["type"] == "HO":
         not_implemented()
