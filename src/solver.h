@@ -15,9 +15,11 @@ protected:
     const double dx, dy, dt;
 public:
     arma::cx_mat internal_state;
-    solver(arma::cx_mat phi_0, arma::mat pot, double dx, double dy, double dt)
-            :mat_pot(std::move(pot)), dx(dx), dy(dy), dt(dt), internal_state(std::move(phi_0)) { };
+    solver(arma::cx_mat phi_0, arma::mat pot, double dx, double dy, double dt);
     virtual void step() = 0;
+
+    double compute_internal_norm();
 };
+
 
 #endif //PROJET_PSA_SOLVER_H

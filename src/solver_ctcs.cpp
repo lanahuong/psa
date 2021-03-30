@@ -2,12 +2,12 @@
 
 void solver_ctcs::step()
 {
-    const arma::cx_mat& phi_0 = this->internal_state;
+    const arma::cx_mat& phi_prev = this->internal_state;
 
-    const int x_size(phi_0.n_cols);
-    const int y_size(phi_0.n_rows);
+    const int x_size(phi_prev.n_cols);
+    const int y_size(phi_prev.n_rows);
 
-    arma::cx_mat g_mat(phi_0);
+    arma::cx_mat g_mat(phi_prev);
     arma::cx_mat g_mat_prev;
 
     do {
@@ -15,17 +15,17 @@ void solver_ctcs::step()
         for (int x = 0; x<x_size; x++) {
             for (int y = 0; y<y_size; y++) {
                 cross_cx t, g;
-                t.x_m_dx = x-1<0 ? 0 : phi_0.at(y, x-1);
-                t.x_p_dx = x+1<x_size ? phi_0.at(y, x+1) : 0;
-                t.y_m_dy = y-1<0 ? 0 : phi_0.at(y-1, x);
-                t.y_p_dy = y+1<y_size ? phi_0.at(y+1, x) : 0;
+                t.x_m_dx = x-1<0 ? 0 : phi_prev.at(y, x-1);
+                t.x_p_dx = x+1<x_size ? phi_prev.at(y, x+1) : 0;
+                t.y_m_dy = y-1<0 ? 0 : phi_prev.at(y-1, x);
+                t.y_p_dy = y+1<y_size ? phi_prev.at(y+1, x) : 0;
 
                 g.x_m_dx = x-1<0 ? 0 : g_mat_prev.at(y, x-1);
                 g.x_p_dx = x+1<x_size ? g_mat_prev.at(y, x+1) : 0;
                 g.y_m_dy = y-1<0 ? 0 : g_mat_prev.at(y-1, x);
                 g.y_p_dy = y+1<y_size ? g_mat_prev.at(y+1, x) : 0;
 
-                g_mat.at(x, y) = solver_ctcs::F(mat_pot.at(x, y), phi_0.at(x, y), t, g);
+                g_mat.at(x, y) = solver_ctcs::F(mat_pot.at(x, y), phi_prev.at(x, y), t, g);
             }
         }
     }
@@ -46,5 +46,3 @@ cx solver_ctcs::F(double pot, cx psi, cross_cx t, cross_cx t_p_dt) const
 }
 solver_ctcs::solver_ctcs(arma::cx_mat phi_0, arma::mat pot, double dx, double dy, double dt)
         :solver(phi_0, pot, dx, dy, dt) { }
-
-
