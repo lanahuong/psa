@@ -1,26 +1,24 @@
 #include "../src/solver_ctcs.h"
 #include <gtest/gtest.h>
-#include <time.h>
+#include <ctime>
 
-constexpr int size = 100;
-constexpr double step = 0.01;
+constexpr int size = 50;
+constexpr double step = 0.1;
 
-TEST(PolyClass, Mandatory)
-{
+TEST(Solver_CTCS, NormConsistency) {
     arma::arma_rng::set_seed(time(0));
-
     arma::cx_mat phi0(size, size);
     phi0.randn();
-
     arma::mat V(size, size);
     V.randn();
-
     solver_ctcs slv(phi0, V, step, step, step);
-    for (int i = 0; i<100; i++) {
-        arma::cx_mat previous_state = slv.internal_state;
-        slv.step();
-        std::cout << "Norm " << slv.compute_internal_norm() << " diff " << arma::norm(slv.internal_state - phi0, 2) << std::endl;
-    }
 
-    std::cout << slv.internal_state;
+    double prev_norm = slv.compute_internal_norm();
+
+    for (int i = 0; i < 3000; i++) {
+        slv.step();
+        double norm = slv.compute_internal_norm();
+        ASSERT_TRUE(std::abs(norm - prev_norm) < epsilon);
+        prev_norm = norm;
+    }
 }
