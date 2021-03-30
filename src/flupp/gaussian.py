@@ -10,7 +10,7 @@ def createMapGaussian(wave , field):
     nbMesh = field["nbSegments"]
     x , y = np.meshgrid(np.linspace(-mapSizeX,mapSizeX,nbMesh), np.linspace(-mapSizeY,mapSizeY,nbMesh))
     g = np.exp(-( ((x - coordX)**2 + (y - coordY)**2) / ( width**2 ) ) )
-    return g
+    return g / (np.sqrt(np.sum(g*g)))
 
 def afficheInit(field, init):
     X , Y = field["dimensions"]
