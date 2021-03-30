@@ -3,7 +3,7 @@ CC = g++ -std=c++11 -fopenmp
 LD = $(CC) -std=c++11 -larmadillo
 CFLAGS = -Wall -Wextra -O2 -I /usr/local/include -march=native -mtune=native
 #CFLAGS += -Wall -Wextra -Werror -pedantic -ansi -Wshadow -Wdouble-promotion -Wundef -fno-common -Wconversion -Wunused-parameter
-TEST_CFLAGS += $(CFLAGS) -I$(FUSED_GTEST_TMP_DIR) -larmadillo -Og -DGTEST_HAS_PTHREAD=0
+TEST_CFLAGS += $(CFLAGS) -I$(FUSED_GTEST_TMP_DIR) -larmadillo -g -DGTEST_HAS_PTHREAD=0
 LDFLAGS = -Wall -Wextra -larmadillo
 
 #Modules to consider in the build. foo.cpp will be foo.
@@ -11,7 +11,7 @@ include tests/modules
 include src/modules
 
 #Folders config
-BINDIR = bin
+BINDIR = exec
 OBJDIR = obj
 SRCDIR = src
 DOCDIR = doc
@@ -20,14 +20,13 @@ FUSED_GTEST_TMP_DIR = tmp
 GTEST_SRC = gtest
 
 #Names of the targets
-TARGET = $(BINDIR)/nuclearDensity
+#TARGET = $(BINDIR)/nuclearDensity
 TEST_TARGET = $(BINDIR)/tests
 
 all : makedirs $(TARGET)
 
 makedirs :
 	mkdir -p tmp
-	mkdir -p bin
 	mkdir -p obj
 
 #Build of the target
