@@ -1,50 +1,16 @@
 #!/usr/bin/env python3
 
-import json, os.path, argparse, sys, pymongo.errors, hashlib, bson, pickle
+import json, os.path, argparse, sys
 import numpy as np
 import gaussian
-from pymongo import MongoClient
+
+sys.path.append(os.path.abspath(os.getcwd() + "/src/utils/"))
+
+import Repository
 
 
 def not_implemented():
     sys.exit("Not implemented")
-
-
-# Add a context and simulation to the database
-def add_simulation(field, dimensions, dx, dy, name, wave):
-
-    # Retrive connection informations
-    with open("src/db-config.json") as json_file:
-        data = json.load(json_file)
-        json_file.close()
-
-    # Connect to DB
-    client = MongoClient(
-        "mongodb://%s:%s@%s/%s"
-        % (data["user"], data["pwd"], data["host"], data["name"])
-    )
-
-    try:
-        db = client[data["name"]]
-
-        binfield = bson.binary.Binary(pickle.dumps(field, protocol=2))
-        context = {
-            "field": binfield,
-            "dimensions": dimensions,
-            "dx": dx,
-            "dy": dy,
-            "name": name,
-        }
-        context_id = db["Contexts"].insert_one(context).inserted_id
-
-        binwave = bson.binary.Binary(pickle.dumps(wave, protocol=2))
-        simulation = {"t": 0, "frames": [binwave], "context": context_id}
-        simulation_id = db["Simulations"].insert_one(simulation).inserted_id
-
-        print("New simulation added : %s" % (str(simulation_id)))
-
-    except pymongo.errors.OperationFailure as e:
-        print("ERROR: %s" % (e))
 
 
 # Parse arguments
@@ -124,7 +90,9 @@ def preprocessing(args):
 
     dx = dimensions[0] / field.shape[0]
     dy = dimensions[1] / field.shape[1]
-    add_simulation(field, dimensions, dx, dy, args.name, wave)
+
+    repo = Repository.Repository()
+    repo.add_simulation(field, dimensions, dx, dy, args.name, wave)
 
 
 def main():
