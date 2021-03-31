@@ -39,3 +39,7 @@ arma::cx_mat solver::shift_mat(arma::cx_mat mat, int rows, int cols) {
     mat = arma::shift(mat, rows, 0);
     return arma::shift(mat, cols, 1);
 }
+
+void solver::normalize_internal_state() {
+    internal_state /= std::sqrt(compute_internal_norm());
+}

@@ -44,11 +44,27 @@ TEST(Solver_CTCS, NormConsistency) {
 
     double prev_norm = slv.compute_internal_norm();
 
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i < 100; i++) {
         slv.step();
         double norm = slv.compute_internal_norm();
         ASSERT_TRUE(std::abs(norm - prev_norm) < epsilon);
         prev_norm = norm;
+    }
+}
+
+TEST(Solver_CTCS, Dirac) {
+    arma::cx_mat phi0(5, 5);
+    phi0.randn();
+    phi0.at(0, 0) = 1000;
+    arma::mat V(5, 5, arma::fill::zeros);
+    solver_ctcs slv(phi0, V, 10e-10, 10e-10, 10e-5);
+
+    slv.normalize_internal_state();
+    std::cout << "inorm" << slv.compute_internal_norm() << std::endl;
+    for (int i = 0; i < 10; i++) {
+        std::cout << "Norm " << slv.compute_internal_norm() << slv.internal_state << std::endl;
+        slv.step();
+        std::cout << "inorm" << slv.compute_internal_norm() << std::endl;
     }
 }
 

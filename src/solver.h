@@ -69,6 +69,9 @@ public:
      * @return
      */
     static arma::cx_mat shift_mat(arma::cx_mat, int rows, int cols);
+
+    void normalize_internal_state();
+
 };
 
 
