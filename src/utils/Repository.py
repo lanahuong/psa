@@ -41,3 +41,25 @@ class Repository:
 
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
+
+    def clean_db(self):
+
+        try:
+            db = self._client[self._db_name]
+
+            db.Contexts.remove({})
+            db.Simulations.remove({})
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))
+
+    def init_db(self):
+
+        try:
+            db = self._client[self._db_name]
+
+            contextsCol = db.create_collection("Contexts")
+            simulationsCol = db.create_collection("Simulations")
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))

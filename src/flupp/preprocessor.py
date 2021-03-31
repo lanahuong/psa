@@ -17,8 +17,12 @@ def not_implemented():
 def parse():
     # Parse arguments
     parser = argparse.ArgumentParser(prog="preprocessor")
+    parser.add_argument("action", type=str, choices=["init", "reset", "new"])
     parser.add_argument(
-        "json_file", type=str, help="path to json file to configure a simulation"
+        "json_file",
+        type=str,
+        nargs="?",
+        help="path to json file to configure a simulation",
     )
     parser.add_argument(
         "--name",
@@ -31,8 +35,12 @@ def parse():
     )
     args = parser.parse_args()
 
+    if args.action == None:
+        parser.print_help()
+        sys.exit()
+
     # If no file path is given print help and exit with error
-    if args.json_file == None:
+    if args.action == "new" and args.json_file == None:
         parser.print_help()
         sys.exit("Missing json file to configure")
 
@@ -99,11 +107,20 @@ def main():
 
     args = parse()
 
-    # If the file does not exist exit with error
-    if not os.path.exists(args.json_file):
-        sys.exit("preprocessor : error : " + args.json_file + " file not found")
+    if args.action == "init":
+        repo = Repository.Repository()
+        repo.init_db()
+        print("The database was correctly initialized.")
+    elif args.action == "reset":
+        repo = Repository.Repository()
+        repo.clean_db()
+        print("The database has been reset.")
+    elif args.action == "new":
+        # If the file does not exist exit with error
+        if not os.path.exists(args.json_file):
+            sys.exit("preprocessor : error : " + args.json_file + " file not found")
 
-    preprocessing(args)
+        preprocessing(args)
 
 
 if __name__ == "__main__":
