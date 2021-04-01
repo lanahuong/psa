@@ -12,23 +12,17 @@ void solver_ctcs::step() {
     const arma::cx_mat f_t_pm_dy = shift_mat(f_t, -1, 0) + shift_mat(f_t, 1, 0);
 
     const cx h2m = reduced_planck * reduced_planck / neutron_mass;
-    const arma::cx_mat fact = cx(0, 2 * reduced_planck / dt) - h2m * (1 / (dx * dx) + 1 / (dy * dy)) - pot;
+    const arma::cx_mat fact = 1 / (cx(0, 2 * reduced_planck / dt) - h2m * (1 / (dx * dx) + 1 / (dy * dy)) - pot);
     const arma::cx_mat fact2 = pot + cx(0, 2 * reduced_planck / dt) + h2m * (1 / (dx * dx) + 1 / (dy * dy));
 
     do {
-        g_n = g_np1;
+        g_n = std::move(g_np1);
+        arma::cx_mat gn_pm_dx = shift_mat(g_n, 0, -1) + shift_mat(g_n, 0, 1);
+        arma::cx_mat gn_pm_dy = shift_mat(g_n, -1, 0) + shift_mat(g_n, 1, 0);
 
-        arma::cx_mat x_m_dx = shift_mat(g_n, 0, -1);
-        arma::cx_mat x_p_dx = shift_mat(g_n, 0, 1);
-        arma::cx_mat y_m_dy = shift_mat(g_n, -1, 0);
-        arma::cx_mat y_p_dy = shift_mat(g_n, 1, 0);
-
-        g_np1 = [&]() {
-            arma::cx_mat res = -(h2m / (2 * dx * dx)) * (f_t_pm_dx + x_m_dx + x_p_dx);
-            res -= (h2m / (2 * dy * dy)) * (f_t_pm_dy + y_m_dy + y_p_dy);
-            res += fact2 % f_t;
-            return res / fact;
-        }();
+        arma::cx_mat res = -(h2m / (2 * dx * dx)) * (f_t_pm_dx + gn_pm_dx) - (h2m / (2 * dy * dy)) * (f_t_pm_dy + gn_pm_dy) + fact2 % f_t;
+        g_np1 = res % fact;
+        // std::cout << arma::norm(g_n - g_np1, "inf") << std::endl;
 
     } while (arma::norm(g_n - g_np1, "inf") > epsilon);
 

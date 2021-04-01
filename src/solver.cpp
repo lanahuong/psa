@@ -1,7 +1,7 @@
 #include "solver.h"
 
-solver::solver(arma::cx_mat phi_0, arma::mat pot, double dx, double dy, double dt)
-        : mat_pot(std::move(pot)), dx(dx), dy(dy), dt(dt), internal_state(std::move(phi_0)) {}
+solver::solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx, double dy, double dt)
+        : mat_pot(pot), dx(dx), dy(dy), dt(dt), internal_state(phi_0) {}
 
 double solver::compute_internal_norm() const {
     return arma::accu(internal_state % arma::conj(internal_state)).real() * dx * dy;
@@ -41,5 +41,5 @@ arma::cx_mat solver::shift_mat(arma::cx_mat mat, int rows, int cols) {
 }
 
 void solver::normalize_internal_state() {
-    internal_state /= std::sqrt(compute_internal_norm());
+    internal_state *= (1 / std::sqrt(compute_internal_norm()));
 }

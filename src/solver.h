@@ -35,7 +35,7 @@ public:
      * @param dy step on the y axis
      * @param dt time step
      */
-    solver(arma::cx_mat phi_0, arma::mat pot, double dx, double dy, double dt);
+    solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx, double dy, double dt);
 
     /**
      * Moves forward the internal state by dt.
