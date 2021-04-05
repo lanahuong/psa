@@ -4,6 +4,8 @@ import json, os.path, argparse, sys
 import numpy as np
 import gaussian
 
+from picture_loader import *
+
 sys.path.append(os.path.abspath(os.getcwd() + "/src/utils/"))
 
 import Repository
@@ -72,10 +74,13 @@ def preprocessing(args):
 
     dimensions = field_desc["dimensions"]
 
-    if "image" in field_desc:
-        # not_implemented()
-        field = np.ones((1000, 1000))
     # Construct field from image
+    if "image" in field_desc:
+        image_path = field_desc["image"]
+
+        field = load_image(image_path)
+        print(field)
+
     elif "formula" in field:
         not_implemented()
     # Construct field from formula
@@ -120,7 +125,7 @@ def main():
         if not os.path.exists(args.json_file):
             sys.exit("preprocessor : error : " + args.json_file + " file not found")
 
-        preprocessing(args)
+    preprocessing(args)
 
 
 if __name__ == "__main__":

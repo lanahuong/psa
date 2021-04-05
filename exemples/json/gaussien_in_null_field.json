@@ -1,6 +1,6 @@
 {
   "field" : {
-    "image" : {},
+    "image" : "exemples/field.png",
     "dimensions" : [100,100],
     "nbSegments" : 1000
 
