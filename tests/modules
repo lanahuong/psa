@@ -1,1 +1,1 @@
-TEST_MODULES += tests_ctcs
+TEST_MODULES += tests_ctcs tests_btcs

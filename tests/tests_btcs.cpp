@@ -3,7 +3,7 @@
 #include <ctime>
 
 constexpr int size = 50;
-constexpr double step = 0.1;
+constexpr double step = 10e-15;
 
 TEST(Solver_BTCS, NormConsistency) {
     arma::arma_rng::set_seed((0));
@@ -18,6 +18,7 @@ TEST(Solver_BTCS, NormConsistency) {
     for (int i = 0; i < 100; i++) {
         slv.step();
         double norm = slv.compute_internal_norm();
+      //  std::cout << "norm " << norm << "prev " << prev_norm << std::endl;
         ASSERT_TRUE(std::abs(norm - prev_norm) < epsilon);
         prev_norm = norm;
     }
@@ -33,7 +34,7 @@ TEST(Solver_BTCS, Dirac) {
     slv.normalize_internal_state();
     std::cout << "inorm" << slv.compute_internal_norm() << std::endl;
     for (int i = 0; i < 2; i++) {
-        std::cout << "Norm " << slv.compute_internal_norm() << slv.internal_state << std::endl;
+    //    std::cout << "Norm " << slv.compute_internal_norm() << slv.internal_state << std::endl;
         slv.step();
         std::cout << "inorm" << slv.compute_internal_norm() << std::endl;
     }
