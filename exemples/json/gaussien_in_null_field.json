@@ -1,9 +1,14 @@
 {
   "field" : {
-    "image" : {},
-    "dimensions" : [100,100]
+    "image" : "exemples/field.png",
+    "dimensions" : [100,100],
+    "nbSegments" : 1000
+
   },
   "wave" : {
-    "type" : "gaussian"
+    "type" : "gaussian",
+    "Coord" : [0,0],
+    "Width"  : 10,
+    "AnguFreq" : 1000
   }
 }

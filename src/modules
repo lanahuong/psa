@@ -1,2 +1,3 @@
-MODULES += SchemeFTCS
+MODULES += solver solver_ctcs SchemeFTCS
 ORPHANED_HEADERS =
+MAIN = main
