@@ -35,19 +35,19 @@ TEST(SchemeCTCS, NormConsistency) {
   }
 }
 
-TEST(SchemeCTCS, Dirac) {
+TEST(Solver_CTCS, Dirac) {
   arma::cx_mat phi0(100, 100);
   phi0.randn();
   // phi0.at(0, 0) = 30;
   arma::mat V(100, 100, arma::fill::zeros);
   SchemeCTCS slv(phi0, V, 10e-2, 10e-2, 10e-10);
 
-  phitdt_norm(slv);
-  // std::cout << "inorm" << phitdt_norm(slv) << std::endl;
+  slv.normalize_phitdt();
+  std::cout << "inorm" << phitdt_norm(slv) << std::endl;
   for (int i = 0; i < 2; i++) {
-    // std::cout << "Norm " << phitdt_norm(slv) << slv.internal_state
-    //          << std::endl;
+    //       std::cout << "Norm " << phitdt_norm(slv) << slv.internal_state <<
+    //       std::endl;
     slv.step();
-    // std::cout << "inorm" << phitdt_norm(slv) << std::endl;
+    std::cout << "inorm" << phitdt_norm(slv) << std::endl;
   }
 }

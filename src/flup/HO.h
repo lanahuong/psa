@@ -21,9 +21,11 @@ class Hermit {
          * Constructor for Hermit objects
          *
          * @param mesh the mesh that will be attributed to the instantiated object
+         * @param n rank of the desired polynomial
          */
-        Hermit(arma::colvec mesh) : mesh(mesh) {
+        Hermit(int n, arma::colvec mesh) : mesh(mesh) {
             hermit_values = arma::mat(mesh.n_elem, 1).ones();
+            hermit(n);
         };
         arma::colvec get(int);
         int insert_size = 5; /*!< Sets the cell size for << operator.*/
@@ -41,11 +43,10 @@ class Hermit {
  */
 class Schrodinger {
     public:
-        const double m = 1; /**< Particle's mass */
-        const double w = 1; /**< Particle's pulsation */
-        const double pi = 1; /**< Pi */
-        const double h_bar = 1; /**< Planck's constant */
-        const double h = 1e-10; /**< Derivation constant */
+        const double m = 1.6749 * 1e-27; /**< Particle's mass (kg) */
+        const double pi = M_PI; /**< Pi */
+        const double h_bar = 6.62607015 * 1e-34 / (2* pi); /**< Reduced Planck's constant (J/s) */
+        const double w = 1e10; /**< Particle's pulsation (rad/s) */
 
         static int factorial(int);
         arma::colvec psi(int, arma::colvec);
