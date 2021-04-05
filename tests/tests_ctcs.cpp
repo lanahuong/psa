@@ -62,7 +62,7 @@ TEST(Solver_CTCS, Dirac) {
     slv.normalize_internal_state();
     std::cout << "inorm" << slv.compute_internal_norm() << std::endl;
     for (int i = 0; i < 2; i++) {
-        std::cout << "Norm " << slv.compute_internal_norm() << slv.internal_state << std::endl;
+ //       std::cout << "Norm " << slv.compute_internal_norm() << slv.internal_state << std::endl;
         slv.step();
         std::cout << "inorm" << slv.compute_internal_norm() << std::endl;
     }

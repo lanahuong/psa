@@ -7,9 +7,9 @@
 
 #include <armadillo>
 
-constexpr double epsilon = 10e-10;
-constexpr double reduced_planck = 6.582119514 * 10e-22;
-constexpr double neutron_mass = 1.674927471 * 10e-27;
+#define epsilon 10e-10
+#define reduced_planck arma::datum::h_bar
+#define neutron_mass arma::datum::m_p
 using cx = std::complex<double>;
 
 /**
