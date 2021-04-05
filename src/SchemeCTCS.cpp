@@ -5,8 +5,8 @@ SchemeCTCS::SchemeCTCS(const arma::cx_mat &phi_0, const arma::mat &pot,
     : Solver(phi_0, pot, dx, dy, dt) {}
 
 void SchemeCTCS::step() {
-  const auto pot(add_zero_border(mat_pot));
-  const auto f_t(add_zero_border(internal_state));
+  const auto pot = mat_pot;
+  const auto f_t = phit;
   arma::cx_mat g_np1 = f_t, g_n;
 
   const arma::cx_mat f_t_pm_dx = shift_mat(f_t, 0, -1) + shift_mat(f_t, 0, 1);
@@ -31,5 +31,6 @@ void SchemeCTCS::step() {
 
   } while (arma::norm(g_n - g_np1, "inf") > epsilon);
 
-  internal_state = shed_zero_border(g_np1);
+  phit = g_np1;
+  phitdt = phit.submat(1, 1, size(phitdt));
 }

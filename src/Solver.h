@@ -18,16 +18,16 @@ using cx = std::complex<double>;
  * implemented in a derived class.
  */
 class Solver {
-protected:
-  const arma::mat mat_pot;
-  const double dx, dy, dt;
 
 public:
   /**
    * Everytime the step() function is called, this state (at t) is updated and
    * contains the new state (at t+dt) of the field
    */
-  arma::cx_mat internal_state;
+  arma::cx_mat phit;
+  arma::cx_mat phitdt;
+  arma::mat mat_pot;
+  const double dx, dy, dt;
 
   /**
    * Constructor to be used
@@ -46,26 +46,6 @@ public:
   virtual void step() = 0;
 
   /**
-   * Integrates the psi state on the whole surface/domain
-   * @return
-   */
-  double compute_internal_norm() const;
-
-  /**
-   * Add a border composed of zeroes around the matrix
-   * @return
-   */
-  static arma::cx_mat add_zero_border(arma::cx_mat);
-
-  static arma::mat add_zero_border(arma::mat);
-
-  /**
-   * Remove the border of the matrix
-   * @return
-   */
-  static arma::cx_mat shed_zero_border(arma::cx_mat);
-
-  /**
    * Shifts the matrix by a certain amount of rows and columns (can be negative)
    * @param rows
    * @param cols
@@ -73,7 +53,7 @@ public:
    */
   static arma::cx_mat shift_mat(arma::cx_mat, int rows, int cols);
 
-  void normalize_internal_state();
+  void normalize_phitdt();
 };
 
 #endif // PROJET_PSA_SOLVER_H
