@@ -30,7 +30,7 @@ layout: true
 class: animated fadeIn middle numbers
 
 .footnote[
-Presentation template - N. Dubray - ENSIIE - 2020 - [:book:](../index.html)
+Presentation template - N. Dubray - ENSIIE - 2020 - [:book:](./index.html)
 ]
 
 ---
@@ -61,6 +61,39 @@ class: toc top
 3. Prochaines actions
 
 ---
+class: top
+# Organisation du projet
+
+$$$$$ TODO arborescence
+$$$$$ TODO Choix : 2 progrmme un solver et un processeur pour pré et post processing et monitoring
+
+---
+
+class: top
+# Préprocesseur
+
+Prend plusieurs commandes
+
+--
+
+## Initialisation de la DB :
+
+`flup init`
+
+--
+
+## Remise à zéro de la base de donnée :
+
+`flup reset`
+
+--
+
+## Créer une nouvelle simulation :
+
+`flup new -n "MaSimul" json_file`
+
+---
+
 
 class: top
 # 2. Création d'ondes
@@ -94,6 +127,33 @@ class: top
 ![](image/ragna5.png)
 
 ---
+class: top
+# 3. Base de données
+
+$$$$$ TODO Architecture explication des choix
+$$$$$ TODO Le setup rapide avec flup
+
+---
+class: top
+# 4. Prochaines actions
+
+--
+
+- terminer les bindings swig
+
+--
+
+- structure du solver
+
+--
+
+- accès à la base de données pour le solver
+
+--
+
+- calculer des simulations complètes
+
+
 </textarea>
 
 <script src="core/javascript/remark.js"></script>
