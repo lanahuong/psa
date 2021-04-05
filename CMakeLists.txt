@@ -17,7 +17,7 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 #target_compile_options(main ${COMPILE_OPTIONS})
 
 #TESTS
-add_executable(tests tests/tests_ctcs.cpp src/solver_ctcs.cpp src/solver_ctcs.h src/solver.h src/solver.cpp)
+add_executable(tests tests/tests_ctcs.cpp tests/tests_btcs.cpp src/solver_ctcs.cpp src/solver_ctcs.h src/solver.h src/solver.cpp src/solver_btcs.cpp src/solver_btcs.h)
 target_link_libraries(tests ${ARMADILLO_LIBRARIES})
 target_compile_options(tests ${COMPILE_OPTIONS})
 target_link_libraries(tests gtest_main)
