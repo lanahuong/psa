@@ -1,6 +1,7 @@
 #ifndef __SCHEME_FTCS_H
 #define __SCHEME_FTCS_H
 
+#include "Solver.h"
 #include <armadillo>
 
 class SchemeFTCS {
