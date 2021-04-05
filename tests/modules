@@ -1,1 +1,1 @@
-TEST_MODULES += TestSchemeFTCS tests_ctcs tests_btcs
+TEST_MODULES += TestSchemeFTCS TestSchemeCTCS TestSchemeBTCS
