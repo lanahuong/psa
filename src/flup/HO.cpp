@@ -39,7 +39,7 @@ void Hermit::hermit(int n) {
  */
 arma::colvec Hermit::get(int n) {
     if ((int) hermit_values.n_cols <= n) {
-        hermit(n);
+        throw "Invalid polynomial index. Must be inferior or equal to max given.";
     }
     return hermit_values.col(n);
 }
@@ -86,6 +86,6 @@ int Schrodinger::factorial(int n){
  * @return the solution computed along given mesh
  */
 arma::colvec Schrodinger::psi(int n, arma::colvec z) {
-    Hermit hermit(sqrt(m*w/h_bar) * z);
-    return (1 / sqrt(pow(2, n) * Schrodinger::factorial(n))) * pow((m*w)/(pi*h_bar), 0.25) * arma::exp(-m*w*(z%z) / (2*h_bar)) % hermit.get(n);
+    Hermit hermit(n , sqrt(m*w/h_bar) * z);
+    return (1 / (sqrt(pow(2, n) * Schrodinger::factorial(n)))) * pow((m*w)/(pi*h_bar), 0.25) * arma::exp(-m*w*(z%z) / (2*h_bar)) % hermit.get(n);
 }
