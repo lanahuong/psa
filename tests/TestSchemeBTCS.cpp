@@ -1,4 +1,4 @@
-#include "../src/SchemeBTCS.h"
+#include "../src/flus/SchemeBTCS.h"
 #include <ctime>
 #include <gtest/gtest.h>
 

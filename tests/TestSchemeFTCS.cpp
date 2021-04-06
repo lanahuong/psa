@@ -2,7 +2,7 @@
 
 #include <armadillo>
 
-#include "../src/SchemeFTCS.h"
+#include "../src/flus/SchemeFTCS.h"
 
 double phitdt_norm(SchemeFTCS &slv) {
   return arma::accu(slv.phitdt % arma::conj(slv.phitdt)).real() * slv.dx *

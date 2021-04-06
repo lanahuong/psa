@@ -8,12 +8,12 @@ LDFLAGS = -larmadillo
 
 #Modules to consider in the build. foo.cpp will be foo.
 include tests/modules
-include src/modules
+include src/flus/modules
 
 #Folders config
 BINDIR = exec
 OBJDIR = obj
-SRCDIR = src
+SRCDIR = src/flus
 DOCDIR = doc
 TEST_SRCDIR = tests
 FUSED_GTEST_TMP_DIR = tmp
@@ -41,10 +41,10 @@ ALL_SOURCES = $(SOURCES) $(MAIN_SRC)
 $(TARGET) : $(ALL_OBJECTS) $(ALL_SOURCES) $(ALL_HEADERS)
 	$(CC) $(LDFLAGS) -o $@ $(ALL_OBJECTS)
 
-$(MAIN_OBJ): obj/%.o : src/%.cpp $(MAIN_SRC)
+$(MAIN_OBJ): obj/%.o : $(SRCDIR)/%.cpp $(MAIN_SRC)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJECTS): obj/%.o : src/%.cpp $(SOURCES) $(ALL_HEADERS)
+$(OBJECTS): obj/%.o : $(SRCDIR)/%.cpp $(SOURCES) $(ALL_HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
