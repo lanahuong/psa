@@ -41,26 +41,22 @@ class: toc top
 1. Organisation du projet
 
 --
-
 2. Avancement
 
 --
+    1. Préprocesseur
+        1. Création d'onde
+        2. Création du potentiel
+        3. Base de donnée
 
-1. Préprocesseur
-    1. Création d'onde
-    2. Création du potentiel
-    3. Base de donnée
-
---
-
-2. Solveur
-    1. CTCS, FTCS, BTCS
+    2. Solveur
+        1. CTCS, FTCS, BTCS
 
 --
-
 3. Prochaines actions
 
 ---
+
 # Organisation du projet
 
 --
@@ -132,9 +128,8 @@ Découpage des tâches et partage du travail avec un Trello-like
    └── TestSchemeFTCS.cpp```
 
 ---
-
 class: top
-# Préprocesseur
+# 1. Préprocesseur
 
 Prend plusieurs commandes
 
@@ -157,8 +152,6 @@ Prend plusieurs commandes
 `flup new -n "MaSimul" json_file`
 
 ---
-
-
 class: top
 # 1. Création d'ondes
 ## Onde Gaussienne
@@ -194,13 +187,31 @@ class: top
 class: top
 # 3. Base de données
 
+--
 
-$$$$$ TODO Architecture explication des choix
-$$$$$ TODO Le setup rapide avec flup
+## Collections
+
+- Contexts
+    - champ de potentiel
+    - dimensions
+    - dx
+    - dy
+    - name
+    - context id
+
+--
+
+- Simulations
+    - temps simulé
+    - frames []
+    - context (id du context utilisé)
+    - méthode
+    - dt
+    - run id
 
 ---
 class: top
-# 4. Prochaines actions
+# 3. Prochaines actions
 
 --
 
