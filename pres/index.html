@@ -155,6 +155,20 @@ Prend plusieurs commandes
 class: top
 # 2. Solveur
 
+- Minimiser l'utilisation des bindings Python-C++ pour transférer les données. 
+
+--
+
+- Appriximation de la solution l'équation de Schrödinger, ici `$\psi = \psi(x, y, y)$`  `$$i\hbar\frac{\partial}{\partial t}\psi = -\frac{\hbar^2}{2m} \frac{\partial^2 \psi}{\partial^2 x} -\frac{\hbar^2}{2m} \frac{\partial^2 \psi}{\partial^2 y} + \hat{V} \psi$$`
+
+--
+
+- Avantage : Unique équation à résoudre -> schémas compilés
+
+`$$ \psi(t+dt) = F(\psi(t)) $$ `
+
+--
+
 ```{C++}
 class Solver {
 
@@ -171,9 +185,7 @@ arma::cx_mat phitdt;
 
 ``` 
 
---
-
-- Minimiser l'utilisation des bindings Python-C++ pour transférer les données. 
+- Tests implémentés `$$\forall t, \iint \psi^*(x,y,t).\psi(x,y,t)\,dx\,dy = \iint \psi_0^*(x,y).\psi_0(x,y)\,dx\,dy = 1.$$`
 
 
 ---
