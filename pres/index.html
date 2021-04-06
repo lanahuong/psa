@@ -61,11 +61,75 @@ class: toc top
 3. Prochaines actions
 
 ---
-class: top
 # Organisation du projet
 
-$$$$$ TODO arborescence
-$$$$$ TODO Choix : 2 progrmme un solver et un processeur pour pré et post processing et monitoring
+--
+
+Découpage des tâches et partage du travail avec un Trello-like
+
+--
+
+### 2 programmes
+
+- un processeur `flup` : pré-traitement, post-traitement, monitoring...
+
+- un solveur `flus` : le solveur lui-même
+
+---
+# Arborescence
+```
+.
+├── AUTHORS
+├── CMakeLists.txt
+├── CMakeLists.txt.in
+├── doc
+│  └── Doxyfile
+├── gtest
+├── Makefile
+├── obj
+├── pres
+├── README.md
+```
+
+
+---
+# Arborescence
+
+
+```
+.
+├── exec
+│  └── flup -> ../src/flup/preprocessor.py
+├── exemples
+│  ├── field.png
+│  └── json
+│     └── gaussien_in_null_field.json
+├── src
+│  ├── db-config.json
+│  ├── flup
+│  │  ├── gaussian.py
+│  │  ├── HO.cpp
+│  │  ├── HO.h
+│  │  ├── picture_loader.py
+│  │  └── preprocessor.py
+│  ├── flus
+│  │  ├── modules
+│  │  ├── SchemeBTCS.cpp
+│  │  ├── SchemeBTCS.h
+│  │  ├── SchemeCTCS.cpp
+│  │  ├── SchemeCTCS.h
+│  │  ├── SchemeFTCS.cpp
+│  │  ├── SchemeFTCS.h
+│  │  ├── Solver.cpp
+│  │  ├── Solver.h
+│  │  └── Solver.i
+│  └── utils
+│     └── Repository.py
+└── tests
+   ├── modules
+   ├── TestSchemeBTCS.cpp
+   ├── TestSchemeCTCS.cpp
+   └── TestSchemeFTCS.cpp```
 
 ---
 
@@ -96,39 +160,40 @@ Prend plusieurs commandes
 
 
 class: top
-# 2. Création d'ondes
+# 1. Création d'ondes
 ## Onde Gaussienne
 ![](image/ragna1.png)
 
 ---
 
 class: top
-# 2. Création d'ondes
+# 1. Création d'ondes
 ## Normalisation
 ![](image/ragna2.png)
 
 ---
 
 class: top
-# 2. Création d'ondes
+# 1. Création d'ondes
 ## Oscillateur harmonique 1D
 ![](image/ragna3.png)
 
 ---
 class: top
-# 2. Création d'ondes
+# 1. Création d'ondes
 ## Oscillateur harmonique 2D
 ![](image/ragna4.png)
 
 ---
 class: top
-# 2. Création d'ondes
+# 1. Création d'ondes
 ## Diverses solutions 2D
 ![](image/ragna5.png)
 
 ---
 class: top
 # 3. Base de données
+
 
 $$$$$ TODO Architecture explication des choix
 $$$$$ TODO Le setup rapide avec flup
