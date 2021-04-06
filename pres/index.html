@@ -153,6 +153,33 @@ Prend plusieurs commandes
 
 ---
 class: top
+# 2. Solveur
+
+```{C++}
+class Solver {
+
+/* Constructeur */
+Solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx, double dy, double dt);
+
+/* Pour avancer de dt, à implémenter par les différents solveurs */
+virtual void step() = 0;
+
+/* Etat */
+arma::cx_mat phitdt;
+
+}
+
+``` 
+
+--
+
+- Minimiser l'utilisation des bindings Python-C++ pour transférer les données. 
+
+
+---
+
+
+class: top
 # 1. Création d'ondes
 ## Onde Gaussienne
 ![](image/ragna1.png)
