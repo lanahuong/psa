@@ -1,8 +1,11 @@
 #include "Solver.h"
+#include <cassert>
 
 Solver::Solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx,
                double dy, double dt)
     : dx(dx), dy(dy), dt(dt) {
+
+    assert(arma::size(phi_0) == arma::size(pot));
 
   // Size of matrix with padding of 1
   int nx = phi_0.n_rows + 2;
