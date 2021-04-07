@@ -3,6 +3,15 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
+def normalize(map, field):
+    norm = np.sqrt(np.sum(map*map))
+    mapSizeX , mapSizeY = field["dimensions"]
+    nbMesh = field["nbSegments"]
+    dx = mapSizeX * 2 / nbMesh
+    dy = mapSizeY * 2 / nbMesh
+    ds = np.sqrt(dx*dy)
+    return map/ (norm*ds)
+
 def createMapGaussian(wave , field):
     coordX , coordY = wave["Coord"]
     width = wave["Width"]
@@ -10,7 +19,9 @@ def createMapGaussian(wave , field):
     nbMesh = field["nbSegments"]
     x , y = np.meshgrid(np.linspace(-mapSizeX,mapSizeX,nbMesh), np.linspace(-mapSizeY,mapSizeY,nbMesh))
     g = np.exp(-( ((x - coordX)**2 + (y - coordY)**2) / ( width**2 ) ) )
-    return g / (np.sqrt(np.sum(g*g)))
+    return normalize(g, field)
+
+
 
 def afficheInit(field, init):
     X , Y = field["dimensions"]
