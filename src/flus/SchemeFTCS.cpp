@@ -18,10 +18,10 @@ void SchemeFTCS::step() {
       (2 * arma::datum::m_e * dy * dy) *
       (phit.submat(1, 2, size(phitdt)) + phit.submat(1, 0, size(phitdt)));
   arma::cx_mat centerpart =
-      arma::dot(mat_pot, phit) +
+      (mat_pot % phit) +
       (i * arma::datum::h_bar / dt +
-       arma::datum::h_bar * arma::datum::h_bar / arma::datum::m_e * dx * dx +
-       arma::datum::h_bar * arma::datum::h_bar / arma::datum::m_e * dy * dy) *
+       arma::datum::h_bar * arma::datum::h_bar / (arma::datum::m_e * dx * dx) +
+       arma::datum::h_bar * arma::datum::h_bar / (arma::datum::m_e * dy * dy)) *
           phit;
 
   phitdt = dt / (i * arma::datum::h_bar) *
