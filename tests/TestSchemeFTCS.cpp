@@ -64,9 +64,11 @@ TEST(SchemeFTCS, step) {
 TEST(SolverFTCS, NormConsistency) {
   arma::arma_rng::set_seed((0));
   arma::cx_mat phi0(10, 10);
-  phi0.randn();
+  phi0.ones();
+  phi0 *=
+      (1 / std::sqrt(arma::accu(phi0 % arma::conj(phi0)).real() * 0.2 * 0.2));
   arma::mat V(10, 10);
-  V.randn();
+  V.ones();
   SchemeFTCS solver(phi0, V, 0.2, 0.2, 0.2);
 
   double prev_norm = phitdt_norm(solver);

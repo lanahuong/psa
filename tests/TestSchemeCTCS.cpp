@@ -20,9 +20,11 @@ TEST(Solver, ShiftTest) {
 TEST(SchemeCTCS, NormConsistency) {
   arma::arma_rng::set_seed((0));
   arma::cx_mat phi0(size, size);
-  phi0.randn();
+  phi0.ones();
+  phi0 *=
+      (1 / std::sqrt(arma::accu(phi0 % arma::conj(phi0)).real() * 0.2 * 0.2));
   arma::mat V(size, size);
-  V.randn();
+  V.ones();
   SchemeCTCS slv(phi0, V, step, step, step);
 
   double prev_norm = phitdt_norm(slv);
