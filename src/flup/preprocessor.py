@@ -126,7 +126,7 @@ def main():
         if not pathlib.Path(args.json_file).exists():
             sys.exit("preprocessor : error : " + args.json_file + " file not found")
 
-    preprocessing(args)
+        preprocessing(args)
 
 
 if __name__ == "__main__":
