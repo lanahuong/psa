@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import json, os.path, argparse, sys
+import json, pathlib, argparse, sys
 import numpy as np
 import gaussian
 
 from picture_loader import *
 
-sys.path.append(os.path.abspath(os.getcwd() + "/src/utils/"))
+utils_path = pathlib.Path(__file__).absolute().parents[1] / "src/utils"
+sys.path.append(utils_path.__str__())
 
 import Repository
 
@@ -122,7 +123,7 @@ def main():
         print("The database has been reset.")
     elif args.action == "new":
         # If the file does not exist exit with error
-        if not os.path.exists(args.json_file):
+        if not pathlib.Path(args.json_file).exists():
             sys.exit("preprocessor : error : " + args.json_file + " file not found")
 
     preprocessing(args)
