@@ -19,22 +19,13 @@ def not_implemented():
 # Parse arguments
 def parse():
     # Parse arguments
-    parser = argparse.ArgumentParser(prog="preprocessor")
+    parser = argparse.ArgumentParser(prog="flup")
     parser.add_argument("action", type=str, choices=["init", "reset", "new"])
     parser.add_argument(
         "json_file",
         type=str,
         nargs="?",
         help="path to json file to configure a simulation",
-    )
-    parser.add_argument(
-        "--name",
-        "-n",
-        default="",
-        nargs="?",
-        type=str,
-        dest="name",
-        help="name of the configuration",
     )
     args = parser.parse_args()
 
@@ -43,9 +34,10 @@ def parse():
         sys.exit()
 
     # If no file path is given print help and exit with error
-    if args.action == "new" and args.json_file == None:
-        parser.print_help()
-        sys.exit("Missing json file to configure")
+    if args.action == "new":
+        if args.json_file == None:
+            parser.print_help()
+            sys.exit("Missing json file to configure")
 
     return args
 
@@ -63,11 +55,25 @@ def preprocessing(args):
             sys.exit("Missing wave description in JSON")
 
         # Get field and wave description
+        sim_name = data["name"]
         field_desc = data["field"]
         wave_desc = data["wave"]
 
         # Close JSON file
         json_file.close()
+
+    repo = Repository.Repository()
+    replace = False
+
+    if repo.name_is_in_db(sim_name):
+        if repo.simulation_started(sim_name):
+            sys.exit(
+                "The simulation "
+                + sim_name
+                + " is already in the database. Choose another name."
+            )
+        else:
+            replace = True
 
     # Construct field
     if "dimensions" not in field_desc:
@@ -80,7 +86,6 @@ def preprocessing(args):
         image_path = field_desc["image"]
 
         field = load_image(image_path)
-        print(field)
 
     elif "formula" in field:
         not_implemented()
@@ -105,8 +110,10 @@ def preprocessing(args):
     dx = dimensions[0] / field.shape[0]
     dy = dimensions[1] / field.shape[1]
 
-    repo = Repository.Repository()
-    repo.add_simulation(field, dimensions, dx, dy, args.name, wave)
+    if replace:
+        repo.update_simulation(field, dimensions, dx, dy, sim_name, wave)
+    else:
+        repo.add_simulation(field, dimensions, dx, dy, sim_name, wave)
 
 
 def main():
