@@ -1,5 +1,5 @@
 %
-module FlusSolver
+module flus
 %include "stl.i"
 %include "std_map.i"
 %include "std_string.i"
@@ -57,13 +57,11 @@ catch(const std::string s) {
 #include "../src/flus/SchemeFTCS.h"
 #include "../src/flus/SchemeBTCS.h"
 #include "../src/flus/SchemeCTCS.h"
-
 %}
 
 %include "armanpy.i"
-
-
 %include "../src/flus/Solver.h"
 %include "../src/flus/SchemeFTCS.h"
 %include "../src/flus/SchemeBTCS.h"
 %include "../src/flus/SchemeCTCS.h"
+
