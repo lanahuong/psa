@@ -15,31 +15,32 @@
 //
 
 #if PY_MAJOR_VERSION < 3
-#define INIT_RETURN
+    #define INIT_RETURN
 #else
-#define INIT_RETURN NULL
+    #define INIT_RETURN NULL
 #endif
 
-#define INIT_ARMA_CAPSULE(MatT)  \
+#define INIT_ARMA_CAPSULE( MatT )  \
     ArmaCapsulePyType< MatT >::object.tp_new = PyType_GenericNew; \
     if (PyType_Ready(&ArmaCapsulePyType< MatT >::object) < 0) return INIT_RETURN;
 
 
-template<typename MatT>
+template< typename MatT >
 struct ArmaCapsule {
     PyObject_HEAD
-            MatT *mat;
-};
+    MatT *mat;
+} ;
 
-template<typename MatT>
-static void ArmaMat_dealloc(PyObject *self) {
+template< typename MatT >
+static void ArmaMat_dealloc( PyObject *self )
+{
     //std::cerr << "ArmaMat_dealloc( " << self << " )"<< std::endl;
     //((ArmaMat_Capsule *)self)->mat->print("mat");
-    delete ((ArmaCapsule<MatT> *) self)->mat;
-    self->ob_type->tp_free(self);
+    delete ((ArmaCapsule<MatT> *)self)->mat;
+    self->ob_type->tp_free( self );
 };
 
-template<typename MatT>
+template<typename MatT >
 class ArmaCapsulePyType {
 public:
     static PyTypeObject object;
@@ -48,7 +49,7 @@ private:
 };
 
 
-template<typename MatT> PyTypeObject ArmaCapsulePyType<MatT>::object = {\
+template< typename MatT > PyTypeObject ArmaCapsulePyType<MatT>::object = { \
     PyVarObject_HEAD_INIT(NULL, 0)   \
     "ArmaCapsule", /*tp_name*/ \
     sizeof( ArmaCapsule< MatT > ), /*tp_basicsize*/ \
@@ -70,7 +71,7 @@ template<typename MatT> PyTypeObject ArmaCapsulePyType<MatT>::object = {\
     0, /*tp_as_buffer*/ \
     Py_TPFLAGS_DEFAULT, /*tp_flags*/ \
     "Internal armadillo capsulation object", /* tp_doc */ \
-};
+    };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Define types (templated) to allow wrapping of boost::shared_ptr< arma::... >
@@ -143,91 +144,83 @@ template< typename MatT > PyTypeObject ArmaBsptrCapsulePyType<MatT>::object = { 
 // #include <numpy/ndarraytypes.h>
 #include <numpy/arrayobject.h>
 
-template<typename elem_type>
-struct NumpyType {
-private:
-    elem_type _d;
-};
+template< typename elem_type > struct NumpyType { private: elem_type _d; };
 
-#define ASSOCIATE_NUMPY_TYPE(elem_type, npy) \
+#define ASSOCIATE_NUMPY_TYPE( elem_type, npy ) \
     template<> struct NumpyType< elem_type > { static int val; }; \
     int NumpyType< elem_type >::val=npy;
 
-ASSOCIATE_NUMPY_TYPE(double, NPY_DOUBLE)
-ASSOCIATE_NUMPY_TYPE(float, NPY_FLOAT)
-ASSOCIATE_NUMPY_TYPE(int, NPY_INT)
-ASSOCIATE_NUMPY_TYPE(unsigned, NPY_UINT)
-ASSOCIATE_NUMPY_TYPE(unsigned char, NPY_UBYTE)
+ASSOCIATE_NUMPY_TYPE( double,   NPY_DOUBLE )
+ASSOCIATE_NUMPY_TYPE( float,    NPY_FLOAT )
+ASSOCIATE_NUMPY_TYPE( int,      NPY_INT )
+ASSOCIATE_NUMPY_TYPE( unsigned, NPY_UINT )
+ASSOCIATE_NUMPY_TYPE( unsigned char, NPY_UBYTE )
 #if defined(ARMA_64BIT_WORD)
 ASSOCIATE_NUMPY_TYPE( arma::sword, NPY_INT64 )
 ASSOCIATE_NUMPY_TYPE( arma::uword, NPY_UINT64 )
 #endif
-ASSOCIATE_NUMPY_TYPE(std::complex < double >, NPY_COMPLEX128)
-ASSOCIATE_NUMPY_TYPE(std::complex < float >, NPY_COMPLEX64)
+ASSOCIATE_NUMPY_TYPE( std::complex< double >, NPY_COMPLEX128 )
+ASSOCIATE_NUMPY_TYPE( std::complex< float >,  NPY_COMPLEX64 )
 
-template<typename MatT>
-struct ArmaTypeInfo {
-private:
-    MatT _d;
-};
-#define ARMA_TYPE_INFO(MatT, nd) \
+template< typename MatT > struct ArmaTypeInfo { private: MatT _d; };
+#define ARMA_TYPE_INFO( MatT, nd ) \
     template<> struct ArmaTypeInfo< MatT > { static int type; static int numdim; }; \
     int ArmaTypeInfo< MatT >::type=NumpyType< MatT::elem_type >::val; \
     int ArmaTypeInfo< MatT >::numdim=nd;
 
-ARMA_TYPE_INFO(arma::vec, 1)
-ARMA_TYPE_INFO(arma::fvec, 1)
-ARMA_TYPE_INFO(arma::ivec, 1)
-ARMA_TYPE_INFO(arma::uvec, 1)
-ARMA_TYPE_INFO(arma::uchar_vec, 1)
+ARMA_TYPE_INFO( arma::vec,          1 )
+ARMA_TYPE_INFO( arma::fvec,         1 )
+ARMA_TYPE_INFO( arma::ivec,         1 )
+ARMA_TYPE_INFO( arma::uvec,         1 )
+ARMA_TYPE_INFO( arma::uchar_vec,    1 )
 #if defined(ARMA_64BIT_WORD)
 ARMA_TYPE_INFO( arma::u32_vec,      1 )
 ARMA_TYPE_INFO( arma::s32_vec,      1 )
 #endif
-ARMA_TYPE_INFO(arma::cx_vec, 1)
-ARMA_TYPE_INFO(arma::cx_fvec, 1)
+ARMA_TYPE_INFO( arma::cx_vec,       1 )
+ARMA_TYPE_INFO( arma::cx_fvec,      1 )
 
-ARMA_TYPE_INFO(arma::rowvec, 1)
-ARMA_TYPE_INFO(arma::frowvec, 1)
-ARMA_TYPE_INFO(arma::irowvec, 1)
-ARMA_TYPE_INFO(arma::urowvec, 1)
-ARMA_TYPE_INFO(arma::uchar_rowvec, 1)
+ARMA_TYPE_INFO( arma::rowvec,       1 )
+ARMA_TYPE_INFO( arma::frowvec,      1 )
+ARMA_TYPE_INFO( arma::irowvec,      1 )
+ARMA_TYPE_INFO( arma::urowvec,      1 )
+ARMA_TYPE_INFO( arma::uchar_rowvec, 1 )
 #if defined(ARMA_64BIT_WORD)
 ARMA_TYPE_INFO( arma::u32_rowvec,   1 )
 ARMA_TYPE_INFO( arma::s32_rowvec,   1 )
 #endif
-ARMA_TYPE_INFO(arma::cx_rowvec, 1)
-ARMA_TYPE_INFO(arma::cx_frowvec, 1)
+ARMA_TYPE_INFO( arma::cx_rowvec,    1 )
+ARMA_TYPE_INFO( arma::cx_frowvec,   1 )
 
-ARMA_TYPE_INFO(arma::mat, 2)
-ARMA_TYPE_INFO(arma::fmat, 2)
-ARMA_TYPE_INFO(arma::imat, 2)
-ARMA_TYPE_INFO(arma::umat, 2)
-ARMA_TYPE_INFO(arma::uchar_mat, 2)
+ARMA_TYPE_INFO( arma::mat,       2 )
+ARMA_TYPE_INFO( arma::fmat,      2 )
+ARMA_TYPE_INFO( arma::imat,      2 )
+ARMA_TYPE_INFO( arma::umat,      2 )
+ARMA_TYPE_INFO( arma::uchar_mat, 2 )
 #if defined(ARMA_64BIT_WORD)
 ARMA_TYPE_INFO( arma::u32_mat,   2 )
 ARMA_TYPE_INFO( arma::s32_mat,   2 )
 #endif
-ARMA_TYPE_INFO(arma::cx_mat, 2)
-ARMA_TYPE_INFO(arma::cx_fmat, 2)
+ARMA_TYPE_INFO( arma::cx_mat,    2 )
+ARMA_TYPE_INFO( arma::cx_fmat,   2 )
 
-ARMA_TYPE_INFO(arma::cube, 3)
-ARMA_TYPE_INFO(arma::fcube, 3)
-ARMA_TYPE_INFO(arma::icube, 3)
-ARMA_TYPE_INFO(arma::ucube, 3)
-ARMA_TYPE_INFO(arma::uchar_cube, 3)
+ARMA_TYPE_INFO( arma::cube,       3 )
+ARMA_TYPE_INFO( arma::fcube,      3 )
+ARMA_TYPE_INFO( arma::icube,      3 )
+ARMA_TYPE_INFO( arma::ucube,      3 )
+ARMA_TYPE_INFO( arma::uchar_cube, 3 )
 #if defined(ARMA_64BIT_WORD)
 ARMA_TYPE_INFO( arma::u32_cube,   3 )
 ARMA_TYPE_INFO( arma::s32_cube,   3 )
 #endif
-ARMA_TYPE_INFO(arma::cx_cube, 3)
-ARMA_TYPE_INFO(arma::cx_fcube, 3)
+ARMA_TYPE_INFO( arma::cx_cube,    3 )
+ARMA_TYPE_INFO( arma::cx_fcube,   3 )
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function to modify conversion and warning behaviour.
 //
 
-static bool armanpy_allow_conversion_flag = false;
+static bool armanpy_allow_conversion_flag   = false;
 static bool armanpy_warn_on_conversion_flag = true;
 
 /*

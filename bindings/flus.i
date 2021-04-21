@@ -1,5 +1,4 @@
-%
-module flus
+%module flus
 %include "stl.i"
 %include "std_map.i"
 %include "std_string.i"
@@ -8,51 +7,32 @@ module flus
 %include "exception.i"
 
 namespace std
-        {
-                %template(map_string_int) map<string, int>;
-                %template(map_string_double) map<string, double>;
-                %template(map_string_string) map<string, string>;
-        }
+{
+  %template(map_string_int) map<string, int>;
+  %template(map_string_double) map<string, double>;
+  %template(map_string_string) map<string, string>;
+}
 
 %exception
 {
-try
-{
-$action
-}
-
-catch(const std::runtime_error
-
-& e) {
-SWIG_exception(SWIG_RuntimeError, e
-.
-
-what()
-
-);
-}
-
-catch(const std::logic_error
-
-& e) {
-SWIG_exception(SWIG_IndexError, e
-.
-
-what()
-
-);
-}
-
-catch(const std::string s) {
+  try
+  {
+    $action
+  }
+  catch (const std::runtime_error& e) {
+    SWIG_exception(SWIG_RuntimeError, e.what());
+  }
+  catch (const std::logic_error& e) {
+    SWIG_exception(SWIG_IndexError, e.what());
+  }
+  catch (const std::string s) {
     SWIG_exception(SWIG_RuntimeError, s.c_str());
-}
-
+  }
 }
 
 
 %{
 #define SWIG_FILE_WITH_INIT
-
 #include "../src/flus/Solver.h"
 #include "../src/flus/SchemeFTCS.h"
 #include "../src/flus/SchemeBTCS.h"
@@ -60,8 +40,8 @@ catch(const std::string s) {
 %}
 
 %include "armanpy.i"
+
 %include "../src/flus/Solver.h"
 %include "../src/flus/SchemeFTCS.h"
 %include "../src/flus/SchemeBTCS.h"
 %include "../src/flus/SchemeCTCS.h"
-
