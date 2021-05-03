@@ -99,7 +99,7 @@ def preprocessing(args):
 
     # Construct wave
     if wave_desc["type"] == "gaussian":
-        wave = gaussian.createMapGaussian(wave_desc, field_desc)
+        wave = gaussian.createMapGaussian(wave_desc, dimensions, field.shape)
         # Construct gaussian wave
     elif wave_desc["type"] == "HO":
         not_implemented()
