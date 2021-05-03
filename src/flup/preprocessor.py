@@ -20,7 +20,7 @@ def not_implemented():
 def parse():
     # Parse arguments
     parser = argparse.ArgumentParser(prog="flup")
-    parser.add_argument("action", type=str, choices=["init", "reset", "new"])
+    parser.add_argument("action", type=str, choices=["init", "reset", "new", "list"])
     parser.add_argument(
         "json_file",
         type=str,
@@ -132,8 +132,12 @@ def main():
         # If the file does not exist exit with error
         if not pathlib.Path(args.json_file).exists():
             sys.exit("preprocessor : error : " + args.json_file + " file not found")
-
         preprocessing(args)
+
+    elif args.action == "list":
+        # List simulations
+        repo = Repository.Repository()
+        repo.list_simulations()
 
 
 if __name__ == "__main__":

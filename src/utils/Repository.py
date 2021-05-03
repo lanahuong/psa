@@ -96,6 +96,17 @@ class Repository:
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
 
+    # Print a list of the simulations in the database
+    def list_simulations(self):
+        try:
+            db = self._client[self._db_name]
+
+            for document in db.Simulations.find({}):
+                print(document["name"])
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))
+
     # Clean the database (make it empty but collections still exists)
     def clean_db(self):
 
