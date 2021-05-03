@@ -3,6 +3,7 @@
 import json, pathlib, argparse, sys
 import numpy as np
 import gaussian
+from pyevtk.hl import gridToVTK
 
 from picture_loader import *
 
@@ -20,26 +21,94 @@ def not_implemented():
 def parse():
     # Parse arguments
     parser = argparse.ArgumentParser(prog="flup")
-    parser.add_argument("action", type=str, choices=["init", "reset", "new", "list"])
-    parser.add_argument(
+    subparsers = parser.add_subparsers()
+
+    parser_init = subparsers.add_parser("init")
+    parser_init.set_defaults(func=db_initialize)
+
+    parser_reset = subparsers.add_parser("reset")
+    parser_reset.set_defaults(func=db_reset)
+
+    parser_new = subparsers.add_parser("new")
+    parser_new.add_argument(
         "json_file",
         type=str,
-        nargs="?",
         help="path to json file to configure a simulation",
     )
+    parser_new.set_defaults(func=preprocessing)
+
+    parser_list = subparsers.add_parser("list")
+    parser_list.set_defaults(func=db_list)
+
+    parser_visual = subparsers.add_parser("visual")
+    parser_visual.add_argument(
+        "name",
+        type=str,
+        help="name identifier of a simulation to visualise",
+    )
+    parser_visual.set_defaults(func=postprocessing)
+
     args = parser.parse_args()
+    args.func(args)
 
-    if args.action == None:
-        parser.print_help()
-        sys.exit()
 
-    # If no file path is given print help and exit with error
-    if args.action == "new":
-        if args.json_file == None:
-            parser.print_help()
-            sys.exit("Missing json file to configure")
+# Initialize database
+def db_initialize(args):
+    repo = Repository.Repository()
+    repo.init_db()
+    print("The database was correctly initialized.")
 
-    return args
+
+# Remove all documents from data base
+def db_reset(args):
+    repo = Repository.Repository()
+    repo.clean_db()
+    print("The database has been reset.")
+
+
+# List simulations
+def db_list(args):
+    repo = Repository.Repository()
+    repo.list_simulations()
+
+
+def postprocessing(args):
+    repo = Repository.Repository()
+    sim = repo.get_simulation(args.name)
+
+    nx, ny = sim["field"].shape
+    nt = sim["t"] + 1
+    half_w = sim["dimensions"][0] / 2
+    half_h = sim["dimensions"][1] / 2
+    x = np.linspace(-half_w, half_w, nx, dtype=np.float32)
+    y = np.linspace(-half_h, half_h, ny, dtype=np.float32)
+    z = np.linspace(0.0, 1.0, 1, dtype=np.float32)
+    t = np.linspace(0, 2 * np.pi, nt, dtype=np.float32)
+
+    filename = "%s_potential" % args.name
+    gridToVTK(
+        filename,
+        x,
+        y,
+        z,
+        pointData={
+            "N": sim["field"].astype(np.float32).reshape((nx, ny, 1), order="C")
+        },
+    )
+    print("%s.vtr generated" % (filename))
+
+    for i in range(nt):
+        filename = "%s_frame%04d" % (args.name, i)
+        gridToVTK(
+            filename,
+            x,
+            y,
+            z,
+            pointData={
+                "N": sim["frames"][i].astype(np.float32).reshape((nx, ny, 1), order="C")
+            },
+        )
+        print("%s.vtr generated" % (filename))
 
 
 # Preprocessing operations
@@ -117,27 +186,7 @@ def preprocessing(args):
 
 
 def main():
-
-    args = parse()
-
-    if args.action == "init":
-        repo = Repository.Repository()
-        repo.init_db()
-        print("The database was correctly initialized.")
-    elif args.action == "reset":
-        repo = Repository.Repository()
-        repo.clean_db()
-        print("The database has been reset.")
-    elif args.action == "new":
-        # If the file does not exist exit with error
-        if not pathlib.Path(args.json_file).exists():
-            sys.exit("preprocessor : error : " + args.json_file + " file not found")
-        preprocessing(args)
-
-    elif args.action == "list":
-        # List simulations
-        repo = Repository.Repository()
-        repo.list_simulations()
+    parse()
 
 
 if __name__ == "__main__":

@@ -107,6 +107,32 @@ class Repository:
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
 
+    def get_simulation(self, name):
+        try:
+            db = self._client[self._db_name]
+
+            document = db.Simulations.find_one({"name": name})
+
+            if document == None:
+                sys.exit(
+                    "The simulation "
+                    + name
+                    + " name is not in the database. Check spelling."
+                )
+
+            field = pickle.loads(document["field"])
+            document["field"] = field
+
+            frames = []
+            for f in document["frames"]:
+                frames.append(pickle.loads(f))
+            document["frames"] = frames
+
+            return document
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))
+
     # Clean the database (make it empty but collections still exists)
     def clean_db(self):
 
