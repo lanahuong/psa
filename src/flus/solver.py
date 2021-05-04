@@ -56,12 +56,6 @@ def solve(args):
 
     sim = repo.start_simulation(args.name, args.method, args.dt)
 
-    if sim["t"] > 0:
-        if args.dt != sim["dt"]:
-            sys.exit(
-                "error: the simulation was already started with a different time pace."
-            )
-
     if args.n <= sim["t"]:
         print("Finished")
         return

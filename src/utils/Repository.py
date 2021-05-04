@@ -82,11 +82,11 @@ class Repository:
             sim = db.Simulations.find_one({"name": name})
             if sim == None:
                 sys.exit("error: no simulation named " + name + "in the database.")
-            if method != "" and method != sim["method"]:
+            if sim["method"] != "" and method != sim["method"]:
                 sys.exit(
                     "error: the simulation was already started with a different method"
                 )
-            if dt != sim["dt"]:
+            if "dt" in sim and dt != sim["dt"]:
                 sys.exit(
                     "error: the simulation was already started with a different time pace."
                 )
