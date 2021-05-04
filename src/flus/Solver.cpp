@@ -3,7 +3,7 @@
 
 Solver::Solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx,
                double dy, double dt)
-    : dx(dx), dy(dy), dt(dt) {
+    : dx_(dx), dy_(dy), dt_(dt) {
 
     assert(arma::size(phi_0) == arma::size(pot));
 
@@ -12,15 +12,15 @@ Solver::Solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx,
   int ny = phi_0.n_cols + 2;
 
   // Create phit with 0 padding
-  phit.zeros(nx, ny);
-  phit.submat(1, 1, size(phi_0)) = phi_0;
+  phit_.zeros(nx, ny);
+    phit_.submat(1, 1, size(phi_0)) = phi_0;
 
   // Create mat_pot with 0 padding
-  mat_pot.zeros(nx, ny);
-  mat_pot.submat(1, 1, size(pot)) = pot;
+  mat_pot_.zeros(nx, ny);
+    mat_pot_.submat(1, 1, size(pot)) = pot;
 
   // Create phitdt withoutpadding
-  phitdt = phi_0;
+  phitdt_ = phi_0;
 }
 
 /**
@@ -33,6 +33,10 @@ arma::cx_mat Solver::shift_mat(arma::cx_mat mat, int rows, int cols) {
 }
 
 void Solver::normalize_phitdt() {
-  phit *=
-      (1 / std::sqrt(arma::accu(phitdt % arma::conj(phitdt)).real() * dx * dy));
+    phit_ *=
+      (1 / std::sqrt(arma::accu(phitdt_ % arma::conj(phitdt_)).real() * dx_ * dy_));
+}
+
+arma::cx_mat Solver::get_state() {
+    return phitdt_;
 }

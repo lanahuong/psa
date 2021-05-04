@@ -4,9 +4,8 @@
 
 #include "../src/flus/SchemeFTCS.h"
 
-double phitdt_norm(SchemeFTCS &slv) {
-  return arma::accu(slv.phitdt % arma::conj(slv.phitdt)).real() * slv.dx *
-         slv.dy;
+static double phitdt_norm(SchemeFTCS &slv) {
+  return arma::accu(slv.phitdt_ % arma::conj(slv.phitdt_)).real() * slv.dx_ * slv.dy_;
 }
 
 TEST(SchemeFTCS, initialize) {
@@ -17,35 +16,35 @@ TEST(SchemeFTCS, initialize) {
   SchemeFTCS solver = SchemeFTCS(phi, V, 1, 1, 1);
   arma::cx_double zero = arma::cx_double(0, 0);
 
-  ASSERT_TRUE(arma::size(solver.mat_pot) == arma::size(4, 4));
-  ASSERT_EQ(solver.mat_pot(0, 0), zero);
-  ASSERT_EQ(solver.mat_pot(0, 1), zero);
-  ASSERT_EQ(solver.mat_pot(0, 2), zero);
-  ASSERT_EQ(solver.mat_pot(0, 3), zero);
-  ASSERT_EQ(solver.mat_pot(3, 0), zero);
-  ASSERT_EQ(solver.mat_pot(3, 1), zero);
-  ASSERT_EQ(solver.mat_pot(3, 2), zero);
-  ASSERT_EQ(solver.mat_pot(3, 3), zero);
-  ASSERT_EQ(solver.mat_pot(1, 0), zero);
-  ASSERT_EQ(solver.mat_pot(2, 0), zero);
-  ASSERT_EQ(solver.mat_pot(1, 3), zero);
-  ASSERT_EQ(solver.mat_pot(2, 3), zero);
+  ASSERT_TRUE(arma::size(solver.mat_pot_) == arma::size(4, 4));
+  ASSERT_EQ(solver.mat_pot_(0, 0), zero);
+  ASSERT_EQ(solver.mat_pot_(0, 1), zero);
+  ASSERT_EQ(solver.mat_pot_(0, 2), zero);
+  ASSERT_EQ(solver.mat_pot_(0, 3), zero);
+  ASSERT_EQ(solver.mat_pot_(3, 0), zero);
+  ASSERT_EQ(solver.mat_pot_(3, 1), zero);
+  ASSERT_EQ(solver.mat_pot_(3, 2), zero);
+  ASSERT_EQ(solver.mat_pot_(3, 3), zero);
+  ASSERT_EQ(solver.mat_pot_(1, 0), zero);
+  ASSERT_EQ(solver.mat_pot_(2, 0), zero);
+  ASSERT_EQ(solver.mat_pot_(1, 3), zero);
+  ASSERT_EQ(solver.mat_pot_(2, 3), zero);
 
-  ASSERT_TRUE(arma::size(solver.phit) == arma::size(4, 4));
-  ASSERT_EQ(solver.phit(0, 0), zero);
-  ASSERT_EQ(solver.phit(0, 1), zero);
-  ASSERT_EQ(solver.phit(0, 2), zero);
-  ASSERT_EQ(solver.phit(0, 3), zero);
-  ASSERT_EQ(solver.phit(3, 0), zero);
-  ASSERT_EQ(solver.phit(3, 1), zero);
-  ASSERT_EQ(solver.phit(3, 2), zero);
-  ASSERT_EQ(solver.phit(3, 3), zero);
-  ASSERT_EQ(solver.phit(1, 0), zero);
-  ASSERT_EQ(solver.phit(2, 0), zero);
-  ASSERT_EQ(solver.phit(1, 3), zero);
-  ASSERT_EQ(solver.phit(2, 3), zero);
+  ASSERT_TRUE(arma::size(solver.phit_) == arma::size(4, 4));
+  ASSERT_EQ(solver.phit_(0, 0), zero);
+  ASSERT_EQ(solver.phit_(0, 1), zero);
+  ASSERT_EQ(solver.phit_(0, 2), zero);
+  ASSERT_EQ(solver.phit_(0, 3), zero);
+  ASSERT_EQ(solver.phit_(3, 0), zero);
+  ASSERT_EQ(solver.phit_(3, 1), zero);
+  ASSERT_EQ(solver.phit_(3, 2), zero);
+  ASSERT_EQ(solver.phit_(3, 3), zero);
+  ASSERT_EQ(solver.phit_(1, 0), zero);
+  ASSERT_EQ(solver.phit_(2, 0), zero);
+  ASSERT_EQ(solver.phit_(1, 3), zero);
+  ASSERT_EQ(solver.phit_(2, 3), zero);
 
-  ASSERT_TRUE(arma::size(solver.phitdt) == arma::size(2, 2));
+  ASSERT_TRUE(arma::size(solver.phitdt_) == arma::size(2, 2));
 }
 
 /*
@@ -62,16 +61,19 @@ TEST(SchemeFTCS, step) {
 */
 
 TEST(SolverFTCS, NormConsistency) {
-  int size = 10;
-  double step = 10e-15;
+  int size = 100;
+  double step = 1;
   arma::arma_rng::set_seed((0));
   arma::cx_mat phi0(size, size);
-  phi0.ones();
-  phi0 *=
-      (1 / std::sqrt(arma::accu(phi0 % arma::conj(phi0)).real() * 0.2 * 0.2));
+  phi0.randn();
+  phi0 *= 10e-10;
+ // phi0 *= (1 / std::sqrt(arma::accu(phi0 % arma::conj(phi0)).real() * step * step));
   arma::mat V(size, size);
-  V.ones();
+  V.zeros();
+
+
   SchemeFTCS solver(phi0, V, step, step, step);
+  //ASSERT_TRUE(std::abs(phitdt_norm(solver) - 1) < epsilon);
 
   double prev_norm = phitdt_norm(solver);
 

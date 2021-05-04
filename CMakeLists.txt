@@ -17,7 +17,7 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 #target_compile_options(main ${COMPILE_OPTIONS})
 
 #TESTS
-add_executable(tests tests/TestSchemeBTCS.cpp tests/TestSchemeCTCS.cpp tests/TestSchemeFTCS.cpp src/flus/SchemeFTCS.cpp src/flus/SchemeCTCS.cpp src/flus/SchemeBTCS.cpp src/flus/Solver.cpp)
+add_executable(tests tests/TestSchemeBTCS.cpp tests/TestSchemeCTCS.cpp tests/TestSchemeFTCS.cpp tests/TestSchemeIntra.cpp src/flus/SchemeFTCS.cpp src/flus/SchemeCTCS.cpp src/flus/SchemeBTCS.cpp src/flus/Solver.cpp)
 target_link_libraries(tests ${ARMADILLO_LIBRARIES})
 target_compile_options(tests ${COMPILE_OPTIONS})
 target_link_libraries(tests gtest_main)

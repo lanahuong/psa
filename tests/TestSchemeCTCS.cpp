@@ -6,8 +6,8 @@ constexpr int size = 50;
 constexpr double step = 1e-15;
 
 double phitdt_norm(Solver &slv) {
-  return arma::accu(slv.phitdt % arma::conj(slv.phitdt)).real() * slv.dx *
-         slv.dy;
+  return arma::accu(slv.phitdt_ % arma::conj(slv.phitdt_)).real() * slv.dx_ *
+         slv.dy_;
 }
 
 TEST(Solver, ShiftTest) {

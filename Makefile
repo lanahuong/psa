@@ -20,10 +20,9 @@ FUSED_GTEST_TMP_DIR = tmp
 GTEST_SRC = gtest
 
 #Names of the targets
-TARGET = $(BINDIR)/solver.so
 TEST_TARGET = $(BINDIR)/tests
 
-all : makedirs $(TARGET)
+all : makedirs $(TEST_TARGET)
 
 makedirs :
 	mkdir -p tmp
