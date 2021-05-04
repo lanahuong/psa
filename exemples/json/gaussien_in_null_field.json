@@ -3,13 +3,13 @@
   "field" : {
     "formula" : 0,
     "dimensions" : [100,100],
-    "nbSegments" : [500,500]
+    "nbSegments" : [256,256]
   },
   "wave" : {
     "type" : "gaussian",
     "Coord" : [0,0],
     "Width"  : 10,
-    "Speed" : [-1,1],
+    "Speed" : [0.01,0.01],
     "AnguFreq" : 1000
   }
 }

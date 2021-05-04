@@ -105,7 +105,9 @@ def postprocessing(args):
             y,
             z,
             pointData={
-                "N": sim["frames"][i].astype(np.float32).reshape((nx, ny, 1), order="C")
+                "N": np.asarray(sim["frames"][i].real, order="C").reshape(
+                    (nx, ny, 1), order="C"
+                )
             },
         )
         print("%s.vtr generated" % (filename))
@@ -158,7 +160,6 @@ def preprocessing(args):
 
     elif "formula" in field_desc:
         field = field_desc["formula"] * np.ones(field_desc["nbSegments"])
-        print(field)
     # Construct field from formula
     else:
         sys.exit("Unknown field description use image or formula")
