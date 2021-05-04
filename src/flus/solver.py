@@ -4,9 +4,12 @@ import json, pathlib, argparse, sys
 import numpy as np
 
 utils_path = pathlib.Path(__file__).absolute().parents[1] / "src/utils"
+bindings_path = pathlib.Path(__file__).absolute().parents[1] / "bindings"
 sys.path.append(utils_path.__str__())
+sys.path.append(bindings_path.__str__())
 
 import Repository
+import flus
 
 # Parse arguments
 def parse():
@@ -31,7 +34,9 @@ def parse():
         default="ctcs",
         help="scheme used to compute the simulation",
     )
-    parser_start.add_argument("-dt", type=int, help="time pace of the simulation in ms")
+    parser_start.add_argument(
+        "-dt", type=float, default=0.1, help="time pace of the simulation in ms"
+    )
     parser_start.add_argument("-t", type=int, help="time of the simulation in ms")
 
     parser_start.set_defaults(func=solve)
@@ -46,8 +51,26 @@ def parse():
 # Compute th simulation with given arguments
 def solve(args):
     repo = Repository.Repository()
-    sim = repo.get_simulation(args.name)
     # Simulate stuff...
+
+    sim = repo.start_simulation(args.name, args.method, args.dt)
+
+    nx, ny = sim["field"].shape
+    dx = sim["dx"]
+    dy = sim["dy"]
+    solver = flus.SchemeCTCS(
+        np.asfortranarray(sim["lastframe"]),
+        np.asfortranarray(sim["field"]),
+        dx,
+        dy,
+        args.dt,
+    )
+    print("Solver initialized")
+
+    for _ in range(20):
+        solver.step()
+        repo.add_frame(args.name, np.asarray(solver.get_state()))
+    print("Finished")
 
 
 # List simulations
