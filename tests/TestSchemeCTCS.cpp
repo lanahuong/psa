@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 constexpr int size = 50;
-constexpr double step = 0.1;
+constexpr double step = 1e-15;
 
 double phitdt_norm(Solver &slv) {
   return arma::accu(slv.phitdt % arma::conj(slv.phitdt)).real() * slv.dx *
@@ -29,7 +29,7 @@ TEST(SchemeCTCS, NormConsistency) {
 
   double prev_norm = phitdt_norm(slv);
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 5; i++) {
     slv.step();
     double norm = phitdt_norm(slv);
     ASSERT_TRUE(std::abs(norm - prev_norm) < epsilon);

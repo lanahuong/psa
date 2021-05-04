@@ -11,3 +11,13 @@ mc = flus.SchemeCTCS(phi0, potential, 0.1, 0.1, 0.1)
 mc.step()
 print("Object in the C++ class (constructor with argument):")
 print(mc.phitdt)
+
+mc = flus.SchemeCTCS(phi0, potential, 0.1, 0.1, 0.1)
+mc.step()
+print("Object in the C++ class (constructor with argument):")
+print(mc.phitdt)
+
+mc = flus.SchemeCTCS(phi0, potential, 0.1, 0.1, 0.1)
+mc.step()
+print("Object in the C++ class (constructor with argument):")
+print(mc.phitdt)

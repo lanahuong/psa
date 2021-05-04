@@ -62,18 +62,21 @@ TEST(SchemeFTCS, step) {
 */
 
 TEST(SolverFTCS, NormConsistency) {
+  int size = 10;
+  double step = 10e-15;
   arma::arma_rng::set_seed((0));
-  arma::cx_mat phi0(10, 10);
+  arma::cx_mat phi0(size, size);
   phi0.ones();
   phi0 *=
       (1 / std::sqrt(arma::accu(phi0 % arma::conj(phi0)).real() * 0.2 * 0.2));
-  arma::mat V(10, 10);
+  arma::mat V(size, size);
   V.ones();
-  SchemeFTCS solver(phi0, V, 0.2, 0.2, 0.2);
+  SchemeFTCS solver(phi0, V, step, step, step);
 
   double prev_norm = phitdt_norm(solver);
 
-  for (int i = 0; i < 1; i++) {
+
+  for (int i = 0; i < 10; i++) {
     solver.step();
     double norm = phitdt_norm(solver);
     std::cout << norm - prev_norm << std::endl;
