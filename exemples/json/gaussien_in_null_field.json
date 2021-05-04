@@ -9,6 +9,7 @@
     "type" : "gaussian",
     "Coord" : [0,0],
     "Width"  : 10,
+    "Speed" : [-1,1],
     "AnguFreq" : 1000
   }
 }
