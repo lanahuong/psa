@@ -5,6 +5,16 @@ import sys
 def not_implemented():
     sys.exit("Not implemented")
 
+def potentialHO(wave,dimensions,shape):
+    mapSizeX, mapSizeY = dimensions
+    nbMeshX, nbMeshY = shape
+    x=np.linspace(-mapSizeX, mapSizeX, nbMeshX)
+    y=np.linspace(-mapSizeY, mapSizeY, nbMeshY)
+    w = wave["Width"]
+    m = 1.6749 * 1e-7
+    map = 0.5 * m * w**2 * np.outer(x**2,y**2)
+    return map
+
 def hermit( n , mesh ):
     H = np.ones([n+1,len(mesh)])
     if (n < 0) :
