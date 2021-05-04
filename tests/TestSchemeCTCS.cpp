@@ -2,7 +2,7 @@
 #include <ctime>
 #include <gtest/gtest.h>
 
-constexpr int size = 50;
+constexpr int size = 5;
 constexpr double step = 1e-5;
 
 
@@ -20,18 +20,15 @@ TEST(Solver, ShiftTest) {
 TEST(SchemeCTCS, NormConsistency) {
     arma::arma_rng::set_seed((0));
     arma::cx_mat phi0(size, size);
-
     phi0.ones();
-   // phi0 *= (1 / std::sqrt(arma::accu(phi0 % arma::conj(phi0)).real() * 0.2 * 0.2));
     arma::mat V(size, size);
     V.ones(); // Building a square of ones;
     V.submat(1, 1, arma::size(size - 2, size - 2)) = arma::mat(size - 2, size - 2, arma::fill::zeros);
     SchemeCTCS slv(phi0, V, step, step, step);
-
     double prev_norm = slv.phitdt_norm();
-
     for (int i = 0; i < 5; i++) {
         slv.step();
+        std::cout << slv.get_phitdt() << std::endl;
         double norm = slv.phitdt_norm();
         ASSERT_TRUE(std::abs(norm - prev_norm) < epsilon);
         prev_norm = norm;

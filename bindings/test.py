@@ -2,22 +2,68 @@
 
 import flus
 import numpy as np
+import matplotlib.pyplot as plt
+from  matplotlib.animation import FuncAnimation
+from mpl_toolkits.mplot3d import Axes3D
 
-phi0 = np.array([[0.1, 0.2], [0.3, 0.4]], dtype=np.complex, order='F')
-potential = np.array([[0.1, 0.2], [0.3, 0.4]], dtype=np.float64, order='F')
-print("Initial object:")
 
-mc = flus.SchemeCTCS(phi0, potential, 0.1, 0.1, 0.1)
-mc.step()
-print("Object in the C++ class (constructor with argument):")
-print(mc.phitdt_)
+size = 30
 
-mc = flus.SchemeCTCS(phi0, potential, 0.1, 0.1, 0.1)
-mc.step()
-print("Object in the C++ class (constructor with argument):")
-print(mc.phitdt_)
+def normalize(m):
+    norm = np.sqrt(np.sum(m * m))
+    mapSizeX, mapSizeY = size,size
+    nbMeshX, nbMeshY = size,size
+    dx = mapSizeX * 2 / nbMeshX
+    dy = mapSizeY * 2 / nbMeshY
+    ds = np.sqrt(dx * dy)
+    return m / (norm * ds)
 
-mc = flus.SchemeCTCS(phi0, potential, 0.1, 0.1, 0.1)
-mc.step()
-print("Object in the C++ class (constructor with argument):")
-print(mc.phitdt_)
+
+def createMapGaussian():
+    coordX = 10
+    coordY = 10
+    width = 10
+    kx = 1
+    ky = 1
+    mapSizeX, mapSizeY = size,size
+    nbMeshX, nbMeshY = size,size
+    x, y = np.meshgrid(
+        np.linspace(-mapSizeX, mapSizeX, nbMeshX),
+        np.linspace(-mapSizeY, mapSizeY, nbMeshY),
+    )
+    g = np.exp(-(((x - coordX) ** 2 + (y - coordY) ** 2) / (width ** 2)))
+    return normalize(g)*np.exp(1j * (kx * x + ky * y))
+
+dx, dy, dt = 1e-5,1e-5,1e-5
+
+solver = flus.SchemeCTCS(
+        np.asfortranarray(createMapGaussian()),
+        np.asfortranarray(np.zeros((size, size))),
+        dx,
+        dy,
+        dt,
+    )
+
+mat = solver.get_phitdt()
+mat = np.absolute(mat)
+
+fig = plt.figure()
+plot = plt.matshow(mat, fignum=0)
+
+def init():
+    plot.set_data(mat)
+    return plot
+
+def update(j):
+    solver.step()
+    mat = solver.get_phitdt()
+    mat = np.absolute(mat)
+    plot.set_data(mat)
+    return [plot]
+
+anim = FuncAnimation(fig, update, init_func = init, frames=100)
+plt.show()
+
+
+
+

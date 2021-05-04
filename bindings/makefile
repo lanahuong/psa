@@ -1,11 +1,11 @@
 all: install
 
 install: package
-	python3 setup.py install --user
+	python3 setup.py install
 
 
 package:
-	CPPFLAGS="-O3 -Wall -Wextra -Wno-delete-non-virtual-dtor -Wno-missing-field-initializers" python3 setup.py build
+	CPPFLAGS="-Ofast -Wall -march=native -mtune=native -Wextra -Wno-delete-non-virtual-dtor -Wno-missing-field-initializers" python3 setup.py build
 
 
 clean:
