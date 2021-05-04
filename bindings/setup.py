@@ -1,7 +1,8 @@
+import numpy
 from setuptools import setup, Extension
 
 module1 = Extension('_flus',
-                    include_dirs = ['./include/armanpy/'],
+                    include_dirs = ['./include/armanpy/', numpy.get_include()],
                     libraries = ['m', 'z', 'armadillo'],
                     sources = ['flus.i', '../src/flus/SchemeFTCS.cpp', '../src/flus/SchemeBTCS.cpp', '../src/flus/SchemeCTCS.cpp', '../src/flus/Solver.cpp'],
                     swig_opts = ["-c++", "-Wall", "-I.", "-I./include/armanpy/"])
