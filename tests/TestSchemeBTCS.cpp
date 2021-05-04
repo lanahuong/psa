@@ -5,10 +5,6 @@
 constexpr int size = 50;
 constexpr double step = 10e-15;
 
-double phitdt_norm(SchemeBTCS &slv) {
-  return arma::accu(slv.phitdt_ % arma::conj(slv.phitdt_)).real() * slv.dx_ *
-         slv.dy_;
-}
 
 TEST(Solver_BTCS, NormConsistency) {
   arma::arma_rng::set_seed((0));
@@ -20,11 +16,11 @@ TEST(Solver_BTCS, NormConsistency) {
   V.ones();
   SchemeBTCS slv(phi0, V, step, step, step);
 
-  double prev_norm = phitdt_norm(slv);
+  double prev_norm = slv.phitdt_norm();
 
   for (int i = 0; i < 1; i++) {
     slv.step();
-    double norm = phitdt_norm(slv);
+    double norm = slv.phitdt_norm();
     //  std::cout << "norm " << norm << "prev " << prev_norm << std::endl;
     ASSERT_TRUE(std::abs(norm - prev_norm) < epsilon);
     prev_norm = norm;
@@ -38,7 +34,7 @@ TEST(Solver_BTCS, Dirac) {
   arma::mat V(100, 100, arma::fill::zeros);
   SchemeBTCS slv(phi0, V, 10e-2, 10e-2, 10e-10);
 
-  slv.normalize_phitdt();
+  //slv.normalize_phitdt();
   // std::cout << "inorm" << phitdt_norm(slv) << std::endl;
   for (int i = 0; i < 2; i++) {
     //    std::cout << "Norm " << phitdt_norm(slv) <<

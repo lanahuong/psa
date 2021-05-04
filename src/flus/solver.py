@@ -80,7 +80,7 @@ def solve(args):
 
     for _ in range(args.n - sim["t"]):
         solver.step()
-        repo.add_frame(args.name, np.asarray(solver.get_state()))
+        repo.add_frame(args.name, np.asarray(solver.get_phitdt()))
     print("Finished")
 
 

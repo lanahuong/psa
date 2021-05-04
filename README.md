@@ -22,6 +22,7 @@ The solver computes the wave at each time step using the previous wave.
 
 - MongoDB
 - numpy (python)
+- pyevtk  
 - pymongo (python)
 - armadillo
 
