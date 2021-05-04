@@ -1,6 +1,8 @@
 import json, pymongo.errors, bson, pickle, pathlib, sys
 from pymongo import MongoClient
 
+# from tabulate import tabulate
+
 utils_path = pathlib.Path(__file__).absolute().parents[2] / "src/utils"
 
 
@@ -34,10 +36,12 @@ class Repository:
                 "t": 0,
                 "dx": dx,
                 "dy": dy,
-                "frames": [binwave],
+                "method": "",
             }
+            frame = {"name": name, "num": 0, "phi": binwave}
 
-            simulation_id = db["Simulations"].insert_one(simulation).inserted_id
+            db["Simulations"].insert_one(simulation)
+            db["Frames"].insert_one(frame)
 
             print("New simulation added : %s" % (name))
 
@@ -59,14 +63,54 @@ class Repository:
                 "t": 0,
                 "dx": dx,
                 "dy": dy,
-                "frames": [binwave],
+                "method": "",
             }
+            frame = {"name": name, "num": 1, "phi": binwave}
 
-            simulation_id = (
-                db["Simulations"].replace_one({"name": name}, simulation).upserted_id
-            )
+            db["Simulations"].replace_one({"name": name}, simulation)
+            db["Frames"].replace_one({"name": name, "num": 1}, frame)
 
             print("Simualation updated : %s" % (name))
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))
+
+    def start_simulation(self, name, method, dt):
+        try:
+            db = self._client[self._db_name]
+
+            db["Simulations"].update_one(
+                {"name": name}, {"$set": {"method": method, "dt": dt}}
+            )
+
+            sim = db.Simulations.find_one({"name": name})
+
+            field = pickle.loads(sim["field"])
+            sim["field"] = field
+
+            lastframe = db.Frames.find_one({"name": name, "num": sim["t"]})
+            sim["lastframe"] = pickle.loads(lastframe["phi"])
+
+            print("Starting simulation %s" % (name))
+
+            return sim
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))
+
+    def add_frame(self, name, frame):
+        try:
+            db = self._client[self._db_name]
+
+            binwave = bson.binary.Binary(pickle.dumps(frame, protocol=2))
+
+            db["Simulations"].update_one({"name": name}, {"$inc": {"t": 1}})
+            sim = db["Simulations"].find_one({"name": name})
+
+            frame = {"name": name, "num": sim["t"], "phi": binwave}
+            db["Frames"].insert_one(frame)
+
+            print("Frame added to %s" % (name))
 
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
@@ -101,8 +145,15 @@ class Repository:
         try:
             db = self._client[self._db_name]
 
-            for document in db.Simulations.find({}):
-                print(document["name"])
+            data = []
+            for doc in db.Simulations.find({}):
+                data.append([doc["name"], doc["t"], doc["method"]])
+
+            headers = ["Name", "Frames", "Scheme"]
+            row_format = "{:>15}" * (len(headers))
+            print(row_format.format(*headers))
+            for row in data:
+                print(row_format.format(*row))
 
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
@@ -111,24 +162,30 @@ class Repository:
         try:
             db = self._client[self._db_name]
 
-            document = db.Simulations.find_one({"name": name})
+            sim = db.Simulations.find_one({"name": name})
 
-            if document == None:
+            if sim == None:
                 sys.exit(
                     "The simulation "
                     + name
                     + " name is not in the database. Check spelling."
                 )
 
-            field = pickle.loads(document["field"])
-            document["field"] = field
+            field = pickle.loads(sim["field"])
+            sim["field"] = field
 
-            frames = []
-            for f in document["frames"]:
-                frames.append(pickle.loads(f))
-            document["frames"] = frames
+            frames = db.Frames.find(
+                {
+                    "name": name,
+                },
+                projection=["num", "phi"],
+                sort=[("num", pymongo.ASCENDING)],
+            )
+            sim["frames"] = []
+            for f in frames:
+                sim["frames"].append(pickle.loads(f["phi"]))
 
-            return document
+            return sim
 
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
@@ -139,7 +196,10 @@ class Repository:
         try:
             db = self._client[self._db_name]
 
-            db.Simulations.remove({})
+            db.Simulations.drop()
+            db.Frames.drop()
+
+            self.init_db()
 
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
@@ -151,6 +211,7 @@ class Repository:
             db = self._client[self._db_name]
 
             simulationsCol = db.create_collection("Simulations")
+            framesCol = db.create_collection("Frames")
 
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
