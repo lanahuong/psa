@@ -35,9 +35,11 @@ def parse():
         help="scheme used to compute the simulation",
     )
     parser_start.add_argument(
-        "-dt", type=float, default=0.1, help="time pace of the simulation in ms"
+        "-dt", type=float, default=1, help="time pace of the simulation in s"
     )
-    parser_start.add_argument("-t", type=int, help="time of the simulation in ms")
+    parser_start.add_argument(
+        "-n", type=int, help="number of simulation frames to compute"
+    )
 
     parser_start.set_defaults(func=solve)
 
@@ -51,9 +53,21 @@ def parse():
 # Compute th simulation with given arguments
 def solve(args):
     repo = Repository.Repository()
-    # Simulate stuff...
+
+    if args.n == None:
+        sys.exit("You must specify a duration (number of frames)")
 
     sim = repo.start_simulation(args.name, args.method, args.dt)
+
+    if sim["t"] > 0:
+        if args.dt != sim["dt"]:
+            sys.exit(
+                "error: the simulation was already started with a different time pace."
+            )
+
+    if args.n <= sim["t"]:
+        print("Finished")
+        return
 
     nx, ny = sim["field"].shape
     dx = sim["dx"]
@@ -67,7 +81,7 @@ def solve(args):
     )
     print("Solver initialized")
 
-    for _ in range(20):
+    for _ in range(args.n - sim["t"]):
         solver.step()
         repo.add_frame(args.name, np.asarray(solver.get_state()))
     print("Finished")

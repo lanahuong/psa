@@ -79,6 +79,18 @@ class Repository:
         try:
             db = self._client[self._db_name]
 
+            sim = db.Simulations.find_one({"name": name})
+            if sim == None:
+                sys.exit("error: no simulation named " + name + "in the database.")
+            if method != "" and method != sim["method"]:
+                sys.exit(
+                    "error: the simulation was already started with a different method"
+                )
+            if dt != sim["dt"]:
+                sys.exit(
+                    "error: the simulation was already started with a different time pace."
+                )
+
             db["Simulations"].update_one(
                 {"name": name}, {"$set": {"method": method, "dt": dt}}
             )
