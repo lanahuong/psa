@@ -156,8 +156,9 @@ def preprocessing(args):
 
         field = load_image(image_path)
 
-    elif "formula" in field:
-        not_implemented()
+    elif "formula" in field_desc:
+        field = field_desc["formula"] * np.ones(field_desc["nbSegments"])
+        print(field)
     # Construct field from formula
     else:
         sys.exit("Unknown field description use image or formula")
