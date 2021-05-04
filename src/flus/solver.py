@@ -38,7 +38,7 @@ def parse():
         "-dt", type=float, default=1, help="time pace of the simulation in s"
     )
     parser_start.add_argument(
-        "-n", type=int, help="number of simulation frames to compute"
+        "-n", type=int, required=True, help="number of simulation frames to compute"
     )
 
     parser_start.set_defaults(func=solve)
@@ -53,9 +53,6 @@ def parse():
 # Compute th simulation with given arguments
 def solve(args):
     repo = Repository.Repository()
-
-    if args.n == None:
-        sys.exit("You must specify a duration (number of frames)")
 
     sim = repo.start_simulation(args.name, args.method, args.dt)
 
