@@ -1,9 +1,9 @@
 {
   "name": "Helloworld",
   "field" : {
-    "image" : "exemples/field.png",
+    "formula" : 0,
     "dimensions" : [100,100],
-    "nbSegments" : 1000
+    "nbSegments" : [500,500]
   },
   "wave" : {
     "type" : "gaussian",
