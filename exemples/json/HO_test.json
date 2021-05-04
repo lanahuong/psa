@@ -1,0 +1,14 @@
+{
+  "name": "Helloworld",
+  "field" : {
+    "formula" : 0,
+    "dimensions" : [100,100],
+    "nbSegments" : [500,500]
+  },
+  "wave" : {
+    "type" : "HO",
+    "Width"  : 1e22,
+    "Harmo" : [2,3],
+    "AnguFreq" : 1000
+  }
+}
