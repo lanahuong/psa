@@ -46,6 +46,17 @@ def parse():
         type=str,
         help="name identifier of a simulation to visualise",
     )
+    parser_visual.add_argument(
+        "-f", type=int, help="first frame to export to vtk visualize"
+    )
+    parser_visual.add_argument(
+        "-l", type=int, help="last frame to export to vtk visualize"
+    )
+    parser_visual.add_argument(
+        "-p",
+        action="store_true",
+        help="export only the potential field to vtk visualize",
+    )
     parser_visual.set_defaults(func=postprocessing)
 
     args = parser.parse_args()
@@ -97,7 +108,26 @@ def postprocessing(args):
     )
     print("%s.vtr generated" % (filename))
 
-    for i in range(nt):
+    if args.p == True:
+        return
+
+    minframe = 0
+    maxframe = sim["t"]
+
+    if args.f != None:
+        if args.f > maxframe:
+            sys.exit("error: the fist frame is after the last frame")
+        if args.f < 0:
+            sys.exit("error: a frame number should be positive")
+        minframe = args.f
+    if args.l != None:
+        if args.l < 0:
+            sys.exit("error: a frame number should be positive")
+        if args.l < minframe:
+            sys.exit("error: the last frame is before the first frame")
+        maxframe = max(minframe, min(args.l, maxframe))
+
+    for i in range(minframe, maxframe + 1):
         filename = "%s_frame%04d" % (args.name, i)
         gridToVTK(
             filename,
