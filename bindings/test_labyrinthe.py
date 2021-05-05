@@ -53,12 +53,27 @@ def normalize(m, size):
     return m / (norm * ds)
 
 
-def createMapGaussian(size):
-    coordX = 20
-    coordY = 20
-    width = 2 * size/5
-    kx = -10000 * size/5
+def createMapGaussian_a(size):
+    coordX = 40
+    coordY = 40
+    width =  size/5
+    kx = 10000 * size/5
     ky = 10000 * size/5
+    mapSizeX, mapSizeY = size,size
+    nbMeshX, nbMeshY = size,size
+    x, y = np.meshgrid(
+        np.linspace(-mapSizeX, mapSizeX, nbMeshX),
+        np.linspace(-mapSizeY, mapSizeY, nbMeshY),
+    )
+    g = np.exp(-(((x - coordX) ** 2 + (y - coordY) ** 2) / (width ** 2)))
+    return normalize(g,size)*np.exp(1j * (kx * x + ky * y))
+
+def createMapGaussian_b(size):
+    coordX = -40
+    coordY = -40
+    width =  size/5
+    kx = 10000 * size/5
+    ky = -10000 * size/5
     mapSizeX, mapSizeY = size,size
     nbMeshX, nbMeshY = size,size
     x, y = np.meshgrid(
@@ -71,8 +86,13 @@ def createMapGaussian(size):
 
 
 def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
-    mat = createMapGaussian(size)
-    solver = flus.SchemeCTCS( np.asfortranarray(mat), np.asfortranarray(np.zeros((size, size))),dx,dy, dt/temporal_supersampling  )
+    mat = createMapGaussian_a(size) + createMapGaussian_b(size)
+
+    #potential = np.asfortranarray(np.zeros((size, size)))
+    potential = np.asfortranarray(load_image("maze_large.jpg"))
+    potential = np.asfortranarray(load_image("maze2.png"))
+
+    solver = flus.SchemeCTCS( np.asfortranarray(mat), potential,dx,dy, dt/temporal_supersampling  )
     mat = np.absolute(mat)
     fig = plt.figure()
     plot = plt.matshow(mat, fignum=0)
@@ -89,7 +109,6 @@ def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
     anim.save(out_name, writer='imagemagick', fps=60)
     #plt.show()
 
-#run_anim(1e-4,1e-4,1e-3, 10, 50, 100, "anim_cassée3.gif")
-#run_anim(0.005,0.005, 1e15, 100, 256, 100, "anim_passable.gif")
-run_anim(0.125,0.125, 2e18, 10, 128, 180, "anim_passable.gif")
-#run_anim(0.125,0.125, 1e18, 10, 256, 180, "anim_passable.gif")
+#run_anim(0.0125,0.0125, 1e16, 10, 800, 100, "anim_passable.gif")
+run_anim(0.125,0.125, 1e17, 10, 128, 4, "anim_passable.gif")
+
