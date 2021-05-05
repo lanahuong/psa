@@ -35,7 +35,7 @@ def parse():
         help="scheme used to compute the simulation",
     )
     parser_start.add_argument(
-        "-dt", type=float, default=1, help="time pace of the simulation in s"
+        "-dt", type=float64, default=1, help="time pace of the simulation in s"
     )
     parser_start.add_argument(
         "-n", type=int, required=True, help="number of simulation frames to compute"
