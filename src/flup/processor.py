@@ -94,10 +94,10 @@ def postprocessing(args):
     nt = sim["t"] + 1
     half_w = sim["dimensions"][0] / 2
     half_h = sim["dimensions"][1] / 2
-    x = np.linspace(-half_w, half_w, nx, dtype=np.float32)
-    y = np.linspace(-half_h, half_h, ny, dtype=np.float32)
-    z = np.linspace(0.0, 1.0, 1, dtype=np.float32)
-    t = np.linspace(0, 2 * np.pi, nt, dtype=np.float32)
+    x = np.linspace(-half_w, half_w, nx, dtype=np.float64)
+    y = np.linspace(-half_h, half_h, ny, dtype=np.float64)
+    z = np.linspace(0.0, 1.0, 1, dtype=np.float64)
+    t = np.linspace(0, 2 * np.pi, nt, dtype=np.float64)
 
     filename = "%s_potential" % args.name
     gridToVTK(
@@ -106,7 +106,7 @@ def postprocessing(args):
         y,
         z,
         pointData={
-            "N": sim["field"].astype(np.float32).reshape((nx, ny, 1), order="C")
+            "N": sim["field"].astype(np.float64).reshape((nx, ny, 1), order="C")
         },
     )
     print("%s.vtr generated" % (filename))
