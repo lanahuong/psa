@@ -16,7 +16,7 @@ def normalize(m, dimensions, shape):
 def createMapGaussian(wave, dimensions, shape):
     coordX, coordY = wave["Coord"]
     width = wave["Width"]
-    kx,ky = wave["Speed"]
+    kx, ky = wave["Speed"]
     mapSizeX, mapSizeY = dimensions
     nbMeshX, nbMeshY = shape
     x, y = np.meshgrid(
@@ -24,7 +24,7 @@ def createMapGaussian(wave, dimensions, shape):
         np.linspace(-mapSizeY, mapSizeY, nbMeshY),
     )
     g = np.exp(-(((x - coordX) ** 2 + (y - coordY) ** 2) / (width ** 2)))
-    return normalize(g, dimensions, shape)*np.exp(1j * (kx * x + ky * y))
+    return normalize(g, dimensions, shape) * np.exp(1j * (kx * x + ky * y))
 
 
 # Obsolete
@@ -37,7 +37,7 @@ def afficheInit(field, init):
     hf = plt.figure()
     ha = hf.add_subplot(111, projection="3d")
 
-    X, Y = np.meshgrid(x, y)  
+    X, Y = np.meshgrid(x, y)
     ha.plot_surface(X, Y, init)
 
     plt.show()
