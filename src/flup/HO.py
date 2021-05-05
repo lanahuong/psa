@@ -13,8 +13,8 @@ def potentialHO(wave,dimensions,shape):
         np.linspace(-mapSizeY, mapSizeY, nbMeshY),
     )
     w = wave["Width"]
-    m = 1.6749 * 1e-7
-    map = 0.5 * m * (w*1e-20)**2 * (x**2+y**2)
+    m = 1.6749 * 1e3
+    map = 0.5 * m * w**2 * (x**2+y**2)
     return map
 
 def hermit( n , mesh ):
@@ -33,7 +33,7 @@ def hermit( n , mesh ):
 
 def schro(n , mesh, w):
     m = 1.6749 * 1e-7
-    h_bar = 6.62607 * 1e16 / (2*np.pi)
+    h_bar = 6.62607 * 1e26 / (2*np.pi)
 
     H = hermit(n,mesh*np.sqrt(m*w/h_bar))
     result = (1/np.sqrt(2**n * math.factorial(n))) * ((m*w)/(np.pih_bar))**0.25 * np.exp(-m*w*mesh*mesh/(2*h_bar)) * H[n]
@@ -45,7 +45,7 @@ def createHO(wave,dimensions,shape):
     x=np.linspace(-mapSizeX, mapSizeX, nbMeshX)
     y=np.linspace(-mapSizeY, mapSizeY, nbMeshY)
     harmoX , harmoY = wave["Harmo"]
-    w = wave["Width"]
+    w = wave["Width"]*1e30
     Xval = schro(harmoX,x,w)
     Yval = schro(harmoY,y,w)
 
