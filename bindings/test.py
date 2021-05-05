@@ -33,7 +33,6 @@ def createMapGaussian(size):
 
 
 
-
 def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
     mat = createMapGaussian(size)
     solver = flus.SchemeCTCS( np.asfortranarray(mat), np.asfortranarray(np.zeros((size, size))),dx,dy, dt/temporal_supersampling  )
@@ -54,4 +53,4 @@ def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
     #plt.show()
 
 #run_anim(1e-4,1e-4,1e-3, 10, 50, 100, "anim_cassée3.gif")
-run_anim(1e-4,1e-4,1e-3, 20, 200, 150, "anim_passable.gif")
+run_anim(0.1,0.1, 10, 1, 50, 150, "anim_passable.gif")
