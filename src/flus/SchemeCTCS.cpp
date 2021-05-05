@@ -1,33 +1,44 @@
 #include "SchemeCTCS.h"
 
+#include <Python/Python.h>
+
+class GILReleaser {
+public:
+    GILReleaser() : save(PyEval_SaveThread()) {}
+
+    ~GILReleaser() {
+        PyEval_RestoreThread(save);
+    }
+
+    PyThreadState* save;
+};
+
 SchemeCTCS::SchemeCTCS(const arma::cx_mat &phi_0, const arma::mat &pot,
                        double dx, double dy, double dt)
-    : Solver(phi_0, pot, dx, dy, dt) {}
+        : Solver(phi_0, pot, dx, dy, dt) {}
 
 void SchemeCTCS::step() {
-  const auto pot = mat_pot_;
-  arma::cx_mat g_np1 = phit_, g_n;
+   // GILReleaser releaser;
+    const auto pot = mat_pot_;
+    arma::cx_mat g_np1 = phit_, g_n;
 
-  const arma::cx_mat f_t_pm_dx = shift_mat(phit_, 0, -1) + shift_mat(phit_, 0, 1);
-  const arma::cx_mat f_t_pm_dy = shift_mat(phit_, -1, 0) + shift_mat(phit_, 1, 0);
+    const arma::cx_mat f_t_pm_dx = phit_.submat(2, 1, size(phitdt_)) + phit_.submat(0, 1, size(phitdt_));
+    const arma::cx_mat f_t_pm_dy = phit_.submat(1, 2, size(phitdt_)) + phit_.submat(1, 0, size(phitdt_));
 
-  const cx h2m = h_bar_ * h_bar_ / m_e_;
-  const arma::cx_mat fact = 1 / (cx(0, 2 * h_bar_ / dt_) -
-                                 h2m * (1 / (dx_ * dx_) + 1 / (dy_ * dy_)) - pot);
-  const arma::cx_mat fact2 = pot + cx(0, 2 * h_bar_ / dt_) +
-                             h2m * (1 / (dx_ * dx_) + 1 / (dy_ * dy_));
+    const auto pot_sub = pot.submat(1, 1, size(phitdt_));
+    const cx h2m = h_bar_ * h_bar_ / m_e_;
+    const arma::cx_mat fact = 1 / (cx(0, 2 * h_bar_ / dt_) - h2m * (1 / (dx_ * dx_) + 1 / (dy_ * dy_)) - pot_sub);
+    const arma::cx_mat fact2 = pot_sub + cx(0, 2 * h_bar_ / dt_) + h2m * (1 / (dx_ * dx_) + 1 / (dy_ * dy_));
 
-  do {
-    g_n = std::move(g_np1);
-    arma::cx_mat gn_pm_dx = shift_mat(g_n, 0, -1) + shift_mat(g_n, 0, 1);
-    arma::cx_mat gn_pm_dy = shift_mat(g_n, -1, 0) + shift_mat(g_n, 1, 0);
-
-    arma::cx_mat res = -(h2m / (2 * dx_ * dx_)) * (f_t_pm_dx + gn_pm_dx) -
-                       (h2m / (2 * dy_ * dy_)) * (f_t_pm_dy + gn_pm_dy) +
-                       fact2 % phit_;
-    g_np1 = res % fact;
-  } while (arma::norm(g_n - g_np1, "inf") > epsilon);
+    do {
+        g_n = g_np1;
+        arma::cx_mat gn_pm_dx = g_n.submat(2, 1, size(phitdt_)) + g_n.submat(0, 1, size(phitdt_));
+        arma::cx_mat gn_pm_dy = g_n.submat(1, 2, size(phitdt_)) + g_n.submat(1, 0, size(phitdt_));
+        arma::cx_mat res = -(h2m / (2 * dx_ * dx_)) * (f_t_pm_dx + gn_pm_dx) - (h2m / (2 * dy_ * dy_)) * (f_t_pm_dy + gn_pm_dy) + fact2 % phit_.submat(1, 1, size(phitdt_));
+        g_np1.submat(1, 1, size(phitdt_)) = res % fact;
+    } while (arma::norm(g_n - g_np1, "inf") > epsilon);
 
     phit_ = g_np1;
-    phitdt_ = phit_.submat(1, 1, size(phitdt_));
+    phitdt_ = g_np1.submat(1, 1, size(phitdt_));
+    //phitdt_ = phit_.submat(1, 1, size(phitdt_));
 }

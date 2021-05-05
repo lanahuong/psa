@@ -7,7 +7,7 @@ from  matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import Axes3D
 
 
-size = 30
+size = 100
 
 def normalize(m):
     norm = np.sqrt(np.sum(m * m))
@@ -22,9 +22,9 @@ def normalize(m):
 def createMapGaussian():
     coordX = 10
     coordY = 10
-    width = 10
-    kx = 1
-    ky = 1
+    width = 20
+    kx = -10
+    ky = 10
     mapSizeX, mapSizeY = size,size
     nbMeshX, nbMeshY = size,size
     x, y = np.meshgrid(
@@ -34,10 +34,11 @@ def createMapGaussian():
     g = np.exp(-(((x - coordX) ** 2 + (y - coordY) ** 2) / (width ** 2)))
     return normalize(g)*np.exp(1j * (kx * x + ky * y))
 
-dx, dy, dt = 1e-5,1e-5,1e-5
+dx, dy, dt = 1e-4,1e-4,1e-4
 
 solver = flus.SchemeCTCS(
         np.asfortranarray(createMapGaussian()),
+       # np.asfortranarray(np.absolute(createMapGaussian())),
         np.asfortranarray(np.zeros((size, size))),
         dx,
         dy,
@@ -55,6 +56,7 @@ def init():
     return plot
 
 def update(j):
+    print(j)
     solver.step()
     mat = solver.get_phitdt()
     mat = np.absolute(mat)

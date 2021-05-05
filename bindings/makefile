@@ -5,7 +5,7 @@ install: package
 
 
 package:
-	CPPFLAGS="-Ofast -Wall -march=native -mtune=native -Wextra -Wno-delete-non-virtual-dtor -Wno-missing-field-initializers" python3 setup.py build
+	CPPFLAGS="-Wall -Wextra -Wno-delete-non-virtual-dtor -Wno-missing-field-initializers" python3 setup.py build
 
 
 clean:
