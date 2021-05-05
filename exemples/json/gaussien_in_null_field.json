@@ -2,13 +2,13 @@
   "name": "Helloworld",
   "field" : {
     "formula" : 0,
-    "dimensions" : [100,100],
+    "dimensions" : [10,10],
     "nbSegments" : [256,256]
   },
   "wave" : {
     "type" : "gaussian",
     "Coord" : [0,0],
-    "Width"  : 10,
+    "Width"  : 3,
     "Speed" : [0.01,0.01],
     "AnguFreq" : 1000
   }
