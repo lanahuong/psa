@@ -60,7 +60,10 @@ def parse():
     parser_visual.set_defaults(func=postprocessing)
 
     args = parser.parse_args()
-    args.func(args)
+    try:
+        args.func(args)
+    except AttributeError:
+        parser.print_help()
 
 
 # Initialize database
