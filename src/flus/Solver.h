@@ -54,6 +54,8 @@ public:
      */
     virtual void step() = 0;
 
+    void step_n(int n) {for(int i = 0 ; i < n ; i ++) this->step();}
+
     /**
      * Shifts the matrix by a certain amount of rows and columns (can be negative)
      * @param rows

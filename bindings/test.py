@@ -6,10 +6,7 @@ import matplotlib.pyplot as plt
 from  matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import Axes3D
 
-
-size = 100
-
-def normalize(m):
+def normalize(m, size):
     norm = np.sqrt(np.sum(m * m))
     mapSizeX, mapSizeY = size,size
     nbMeshX, nbMeshY = size,size
@@ -19,12 +16,12 @@ def normalize(m):
     return m / (norm * ds)
 
 
-def createMapGaussian():
-    coordX = 10
-    coordY = 10
-    width = 20
-    kx = -10
-    ky = 10
+def createMapGaussian(size):
+    coordX = 20
+    coordY = 20
+    width = 2 * size/5
+    kx = -size/5
+    ky = size/5
     mapSizeX, mapSizeY = size,size
     nbMeshX, nbMeshY = size,size
     x, y = np.meshgrid(
@@ -32,40 +29,29 @@ def createMapGaussian():
         np.linspace(-mapSizeY, mapSizeY, nbMeshY),
     )
     g = np.exp(-(((x - coordX) ** 2 + (y - coordY) ** 2) / (width ** 2)))
-    return normalize(g)*np.exp(1j * (kx * x + ky * y))
+    return normalize(g,size)*np.exp(1j * (kx * x + ky * y))
 
-dx, dy, dt = 1e-4,1e-4,1e-4
 
-solver = flus.SchemeCTCS(
-        np.asfortranarray(createMapGaussian()),
-       # np.asfortranarray(np.absolute(createMapGaussian())),
-        np.asfortranarray(np.zeros((size, size))),
-        dx,
-        dy,
-        dt,
-    )
 
-mat = solver.get_phitdt()
-mat = np.absolute(mat)
 
-fig = plt.figure()
-plot = plt.matshow(mat, fignum=0)
-
-def init():
-    plot.set_data(mat)
-    return plot
-
-def update(j):
-    print(j)
-    solver.step()
-    mat = solver.get_phitdt()
+def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
+    mat = createMapGaussian(size)
+    solver = flus.SchemeCTCS( np.asfortranarray(mat), np.asfortranarray(np.zeros((size, size))),dx,dy, dt/temporal_supersampling  )
     mat = np.absolute(mat)
-    plot.set_data(mat)
-    return [plot]
+    fig = plt.figure()
+    plot = plt.matshow(mat, fignum=0)
+    def init():
+        plot.set_data(mat)
+        return plot
+    def update(j):
+        print(j)
+        solver.step_n(temporal_supersampling)
+        mat = np.absolute(solver.get_phitdt())
+        plot.set_data(mat)
+        return [plot]
+    anim = FuncAnimation(fig, update, init_func = init, frames=frames_count)
+    anim.save(out_name, writer='imagemagick', fps=60)
+    #plt.show()
 
-anim = FuncAnimation(fig, update, init_func = init, frames=100)
-plt.show()
-
-
-
-
+#run_anim(1e-4,1e-4,1e-3, 10, 50, 100, "anim_cassée3.gif")
+run_anim(1e-4,1e-4,1e-3, 20, 200, 150, "anim_passable.gif")
