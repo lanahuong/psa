@@ -42,3 +42,18 @@ arma::cx_mat Solver::shift_mat(arma::cx_mat mat, int rows, int cols) {
 arma::cx_mat Solver::get_phitdt() const {
     return phitdt_ * phi_norm_;
 }
+
+double Solver::get_step_scale() const { return step_scale_; }
+
+arma::mat Solver::get_phitdt_absolute() const {
+    return arma::sqrt(arma::real(this->get_phitdt() % arma::conj(this->get_phitdt())));
+}
+
+double Solver::phitdt_norm() const {
+    return arma::accu(this->get_phitdt() % arma::conj(this->get_phitdt())).real() * dx_ * dy_;
+}
+
+void Solver::step_n(int n) {
+    for (int i = 0; i < n; i++)
+        this->step();
+}

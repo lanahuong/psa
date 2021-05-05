@@ -85,14 +85,17 @@ def createMapGaussian_b(size):
 
 
 
+np.set_printoptions(threshold=sys.maxsize)
 def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
     mat = createMapGaussian_a(size) + createMapGaussian_b(size)
 
-    #potential = np.asfortranarray(np.zeros((size, size)))
-    potential = np.asfortranarray(load_image("maze_large.jpg"))
-    potential = np.asfortranarray(load_image("maze2.png"))
+    potential = np.asfortranarray(np.zeros((size, size)))
+    #potential = 1e40 * np.asfortranarray(load_image("maze_128.png"))
+    potential =  10e25 *np.asfortranarray(load_image("maze_256.png"))
+    #print(potential)
 
     solver = flus.SchemeCTCS( np.asfortranarray(mat), potential,dx,dy, dt/temporal_supersampling  )
+    print(solver.phitdt_norm())
     mat = np.absolute(mat)
     fig = plt.figure()
     plot = plt.matshow(mat, fignum=0)
@@ -101,14 +104,16 @@ def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
         return plot
     def update(j):
         print(j)
+        #print(solver.phitdt_norm())
         solver.step_n(temporal_supersampling)
-        mat = np.absolute(solver.get_phitdt())
+        mat = (solver.get_phitdt_absolute())
         plot.set_data(mat)
         return [plot]
     anim = FuncAnimation(fig, update, init_func = init, frames=frames_count)
     anim.save(out_name, writer='imagemagick', fps=60)
     #plt.show()
 
-#run_anim(0.0125,0.0125, 1e16, 10, 800, 100, "anim_passable.gif")
-run_anim(0.125,0.125, 1e17, 10, 128, 4, "anim_passable.gif")
+run_anim(0.125,0.125, 1e2, 10, 256, 1000, "anim_passable.gif")
+#run_anim(0.125,0.125, 1e3, 10, 128, 100, "anim_passable_maze2.gif")
+
 

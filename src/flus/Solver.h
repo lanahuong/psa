@@ -18,14 +18,13 @@ using cx = std::complex<double>;
 class Solver {
 protected:
     double phi_norm_ = 1; // The value to get back the real phi as we normalise the phi matrix internally to deal with values close to 1.
-    const double step_scale_ =
-            1e-15; // femto, depends ont the inputs, shouldn't be changed without changing the FRONTEND!!!!
+    const double step_scale_ = 1e-15; // femto, depends ont the inputs, shouldn't be changed without changing the FRONTEND!!!!
 
     const double m_e_ = arma::datum::m_e;     // Put here whatever suits you
-    const double h_bar_ = arma::datum::h_bar; // Put here whatever suits you
+    const double h_bar_ = arma::datum::h_bar / step_scale_; // Put here whatever suits you
 
-    const double m_e_scale_ = arma::datum::m_e / m_e_; // Deduced automatically
-    const double h_bar_scale_ = arma::datum::h_bar / h_bar_;
+    const double m_e_scale_ = 1;//arma::datum::m_e / m_e_; // Deduced automatically
+    const double h_bar_scale_ = 1;// arma::datum::h_bar / h_bar_;
 
     /**
      * Everytime the step() function is called, this state (at t) is updated and
@@ -53,10 +52,10 @@ public:
      */
     virtual void step() = 0;
 
-    void step_n(int n) {
-        for (int i = 0; i < n; i++)
-            this->step();
-    }
+    /**
+     * Moves forward the internal state by n*dt.
+     */
+    void step_n(int n);
 
     /**
      * Shifts the matrix by a certain amount of rows and columns (can be negative)
@@ -66,14 +65,21 @@ public:
      */
     static arma::cx_mat shift_mat(arma::cx_mat, int rows, int cols);
 
+    /**
+     * Returns the current state of the solver
+     * @return
+     */
     arma::cx_mat get_phitdt() const;
 
-    double phitdt_norm() {
-        return arma::accu(phitdt_ % arma::conj(phitdt_)).real() * dx_ * dy_ *
-               phi_norm_ * phi_norm_ * step_scale_ * step_scale_;
-    }
+    /**
+     * Returns the psi % psi_bar matrix which is real
+     * @return
+     */
+    arma::mat get_phitdt_absolute() const;
 
-    double get_step_scale() { return step_scale_; }
+    double phitdt_norm() const;
+
+    double get_step_scale() const;
 };
 
 #endif // PROJET_PSA_SOLVER_H
