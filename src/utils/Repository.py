@@ -191,7 +191,7 @@ class Repository:
                     "name": name,
                 },
                 projection=["num", "phi"],
-                sort=[("num", pymongo.ASCENDING)],
+                # sort=[("num", pymongo.ASCENDING)],
             )
             sim["frames"] = []
             for f in frames:

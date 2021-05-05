@@ -2,7 +2,7 @@
   "name": "Helloworld",
   "field" : {
     "formula" : 0,
-    "dimensions" : [100,100],
+    "dimensions" : [10,10],
     "nbSegments" : [256,256]
   },
   "wave" : {

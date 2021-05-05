@@ -1,7 +1,7 @@
 all: install
 
 install: package
-	python3 setup.py install
+	python3 setup.py install --user
 
 
 package:

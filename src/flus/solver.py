@@ -53,7 +53,7 @@ def parse():
 # Compute th simulation with given arguments
 def solve(args):
     repo = Repository.Repository()
-
+    supersampling = 20
     sim = repo.start_simulation(args.name, args.method, args.dt)
 
     if args.n <= sim["t"]:
@@ -68,12 +68,12 @@ def solve(args):
         np.asfortranarray(sim["field"]),
         dx,
         dy,
-        args.dt,
+        args.dt / supersampling,
     )
     print("Solver initialized")
 
     for _ in range(args.n - sim["t"]):
-        solver.step()
+        solver.step_n(supersampling)
         repo.add_frame(args.name, np.asarray(solver.get_phitdt()))
     print("Finished")
 
