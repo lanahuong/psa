@@ -20,8 +20,8 @@ def createMapGaussian(size):
     coordX = 20
     coordY = 20
     width = 2 * size/5
-    kx = -100 * size/5
-    ky = 100 * size/5
+    kx = -10000 * size/5
+    ky = 10000 * size/5
     mapSizeX, mapSizeY = size,size
     nbMeshX, nbMeshY = size,size
     x, y = np.meshgrid(
@@ -53,4 +53,6 @@ def run_anim(dx, dy, dt, temporal_supersampling, size, frames_count, out_name):
     #plt.show()
 
 #run_anim(1e-4,1e-4,1e-3, 10, 50, 100, "anim_cassée3.gif")
-run_anim(0.1,0.1, 1e18, 5, 100, 130, "anim_passable.gif")
+#run_anim(0.005,0.005, 1e15, 100, 256, 100, "anim_passable.gif")
+run_anim(0.125,0.125, 2e18, 10, 128, 180, "anim_passable.gif")
+#run_anim(0.125,0.125, 1e18, 10, 256, 180, "anim_passable.gif")

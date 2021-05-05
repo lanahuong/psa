@@ -21,8 +21,8 @@ protected:
     const double step_scale_ =
             1e-15; // femto, depends ont the inputs, shouldn't be changed without changing the FRONTEND!!!!
 
-    const double m_e_ = std::sqrt(arma::datum::m_e);     // Put here whatever suits you
-    const double h_bar_ = std::sqrt(arma::datum::h_bar); // Put here whatever suits you
+    const double m_e_ = arma::datum::m_e;     // Put here whatever suits you
+    const double h_bar_ = arma::datum::h_bar; // Put here whatever suits you
 
     const double m_e_scale_ = arma::datum::m_e / m_e_; // Deduced automatically
     const double h_bar_scale_ = arma::datum::h_bar / h_bar_;

@@ -34,7 +34,7 @@ void SchemeCTCS::step() {
         arma::cx_mat gn_pm_dy = g_n.submat(1, 2, size(phitdt_)) + g_n.submat(1, 0, size(phitdt_));
         arma::cx_mat res = -(h2m / (2 * dx_ * dx_)) * (f_t_pm_dx + gn_pm_dx) - (h2m / (2 * dy_ * dy_)) * (f_t_pm_dy + gn_pm_dy) + fact2 % phit_.submat(1, 1, size(phitdt_));
         g_np1.submat(1, 1, size(phitdt_)) = res % fact;
-    } while (arma::norm(g_n - g_np1, "inf") > epsilon);
+    } while (arma::norm(g_n.submat(1, 1, size(phitdt_)) - g_np1.submat(1, 1, size(phitdt_)), "inf") > epsilon);
 
     phit_ = g_np1;
     phitdt_ = g_np1.submat(1, 1, size(phitdt_));
