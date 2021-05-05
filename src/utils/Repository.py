@@ -152,6 +152,20 @@ class Repository:
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
 
+    def time_simulated(self, name):
+        try:
+            db = self._client[self._db_name]
+
+            document = db.Simulations.find_one({"name": name})
+
+            if document == None:
+                sys.exit("name not found")
+
+            return document["t"]
+
+        except pymongo.errors.OperationFailure as e:
+            print("ERROR: %s" % (e))
+
     # Print a list of the simulations in the database
     def list_simulations(self):
         try:
@@ -170,7 +184,7 @@ class Repository:
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
 
-    def get_simulation(self, name):
+    def get_simulation(self, name, first, last):
         try:
             db = self._client[self._db_name]
 
@@ -194,7 +208,8 @@ class Repository:
                 # sort=[("num", pymongo.ASCENDING)],
             )
             sim["frames"] = []
-            for f in frames:
+            for i in range(first, last + 1):
+                f = db.Frames.find_one({"name": name, "num": i}, projection=["phi"])
                 sim["frames"].append(pickle.loads(f["phi"]))
 
             return sim

@@ -88,7 +88,24 @@ def db_list(args):
 
 def postprocessing(args):
     repo = Repository.Repository()
-    sim = repo.get_simulation(args.name)
+
+    minframe = 0
+    maxframe = repo.time_simulated(args.name)
+
+    if args.f != None:
+        if args.f > maxframe:
+            sys.exit("error: the fist frame is after the last frame")
+        if args.f < 0:
+            sys.exit("error: a frame number should be positive")
+        minframe = args.f
+    if args.l != None:
+        if args.l < 0:
+            sys.exit("error: a frame number should be positive")
+        if args.l < minframe:
+            sys.exit("error: the last frame is before the first frame")
+        maxframe = args.l
+
+    sim = repo.get_simulation(args.name, minframe, maxframe)
 
     nx, ny = sim["field"].shape
     nt = sim["t"] + 1
@@ -114,33 +131,15 @@ def postprocessing(args):
     if args.p == True:
         return
 
-    minframe = 0
-    maxframe = sim["t"]
-
-    if args.f != None:
-        if args.f > maxframe:
-            sys.exit("error: the fist frame is after the last frame")
-        if args.f < 0:
-            sys.exit("error: a frame number should be positive")
-        minframe = args.f
-    if args.l != None:
-        if args.l < 0:
-            sys.exit("error: a frame number should be positive")
-        if args.l < minframe:
-            sys.exit("error: the last frame is before the first frame")
-        maxframe = max(minframe, min(args.l, maxframe))
-
-    for i in range(minframe, maxframe + 1):
-        filename = "%s_frame%04d" % (args.name, i)
+    for i, f in enumerate(sim["frames"]):
+        filename = "%s_frame%04d" % (args.name, i + minframe)
         gridToVTK(
             filename,
             x,
             y,
             z,
             pointData={
-                "N": np.asarray(sim["frames"][i].real, order="C").reshape(
-                    (nx, ny, 1), order="C"
-                )
+                "N": np.asarray(f.real, order="C").reshape((nx, ny, 1), order="C")
             },
         )
         print("%s.vtr generated" % (filename))
