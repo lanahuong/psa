@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 constexpr int size = 5;
-constexpr double step = 1e-5;
+constexpr double step = 0.1;
 
 
 TEST(Solver, ShiftTest) {
@@ -40,7 +40,7 @@ TEST(Solver_CTCS, Dirac) {
     phi0.randn();
     // phi0.at(0, 0) = 30;
     arma::mat V(100, 100, arma::fill::zeros);
-    SchemeCTCS slv(phi0, V, 10e-2, 10e-2, 10e-10);
+    SchemeCTCS slv(phi0, V, 0.1, 0.1, 0.1);
 
     //slv.normalize_phitdt();
 
