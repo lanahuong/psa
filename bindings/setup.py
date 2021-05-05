@@ -1,8 +1,10 @@
 import numpy
 from setuptools import setup, Extension
 
+from distutils.sysconfig import get_python_inc
+
 module1 = Extension('_flus',
-                    include_dirs = ['./include/armanpy/', numpy.get_include()],
+                    include_dirs = ['./include/armanpy/', numpy.get_include(), get_python_inc()],
                     libraries = ['m', 'z', 'armadillo'],
                     extra_compile_args=["-fopenmp", "-Ofast", "-march=native", "-mtune=native"],
                     extra_link_args=['-lomp'],
