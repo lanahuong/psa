@@ -1,17 +1,11 @@
 #include "SchemeCTCS.h"
 
-#include <Python/Python.h>
-
+/*#include <Python/Python.h>
 class GILReleaser {
 public:
     GILReleaser() : save(PyEval_SaveThread()) {}
-
-    ~GILReleaser() {
-        PyEval_RestoreThread(save);
-    }
-
-    PyThreadState* save;
-};
+    ~GILReleaser() {PyEval_RestoreThread(save);}
+    PyThreadState* save;};*/
 
 SchemeCTCS::SchemeCTCS(const arma::cx_mat &phi_0, const arma::mat &pot,
                        double dx, double dy, double dt)
