@@ -26,14 +26,16 @@ def createMapGaussian(wave, dimensions, shape):
     g = np.exp(-(((x - coordX) ** 2 + (y - coordY) ** 2) / (width ** 2)))
     return normalize(g, dimensions, shape) * np.exp(1j * (kx * x + ky * y))
 
-def createPotentialGaussian(max,width, dimensions, shape):
+def createPotentialGaussian(maxi,width, dimensions, shape):
     mapSizeX, mapSizeY = dimensions
     nbMeshX, nbMeshY = shape
     x, y = np.meshgrid(
         np.linspace(-mapSizeX, mapSizeX, nbMeshX),
         np.linspace(-mapSizeY, mapSizeY, nbMeshY),
     )
-    g = - 1 * np.exp(-(x**2 + y**2) / (width ** 2))
+    g = np.exp(-(x**2 + y**2) / (width ** 2))
+    g = normalize(g, dimensions, shape)
+    g = maxi - maxi * g / max(g)
     return g
 
 # Obsolete
