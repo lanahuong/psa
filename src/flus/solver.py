@@ -63,13 +63,32 @@ def solve(args):
     nx, ny = sim["field"].shape
     dx = sim["dx"]
     dy = sim["dy"]
-    solver = flus.SchemeCTCS(
-        np.asfortranarray(sim["lastframe"]),
-        np.asfortranarray(sim["field"]),
-        dx,
-        dy,
-        args.dt / supersampling,
-    )
+    if sim["method"] == "ctcs":
+        solver = flus.SchemeCTCS(
+            np.asfortranarray(sim["lastframe"], dtype=complex),
+            np.asfortranarray(sim["field"]),
+            dx,
+            dy,
+            args.dt / supersampling,
+        )
+    elif sim["method"] == "ftcs":
+        solver = flus.SchemeFTCS(
+            np.asfortranarray(sim["lastframe"], dtype=complex),
+            np.asfortranarray(sim["field"]),
+            dx,
+            dy,
+            args.dt / supersampling,
+        )
+    elif sim["method"] == "btcs":
+        solver = flus.SchemeBTCS(
+            np.asfortranarray(sim["lastframe"], dtype=complex),
+            np.asfortranarray(sim["field"]),
+            dx,
+            dy,
+            args.dt / supersampling,
+        )
+    else:
+        sys.exit("Not a valid scheme")
     print("Solver initialized")
 
     for _ in range(args.n - sim["t"]):
