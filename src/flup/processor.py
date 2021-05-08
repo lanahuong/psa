@@ -3,6 +3,7 @@
 import json, pathlib, argparse, sys
 import numpy as np
 import gaussian
+import HO
 from pyevtk.hl import gridToVTK
 
 from picture_loader import *
@@ -204,11 +205,12 @@ def preprocessing(args):
 
     # Construct wave
     if wave_desc["type"] == "gaussian":
-        wave = gaussian.createMapGaussian(wave_desc, dimensions, field.shape)
         # Construct gaussian wave
+        wave = gaussian.createMapGaussian(wave_desc, dimensions, field.shape)
     elif wave_desc["type"] == "HO":
-        not_implemented()
         # Construct HO solution wave
+        wave = HO.createHO(wave_desc, dimensions, field.shape)
+        field = HO.potentialHO(wave_desc, dimensions, field.shape)
     else:
         sys.exit("Unknown wave type use 'gaussian' or 'HO'")
 
