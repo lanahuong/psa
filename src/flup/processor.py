@@ -145,7 +145,7 @@ def postprocessing(args):
                 )
             },
         )
-        print("%s.vtr generated" % (filename))
+    print("%s_frame[%d-%d].vtr generated" % (args.name, minframe, maxframe))
 
 
 # Preprocessing operations

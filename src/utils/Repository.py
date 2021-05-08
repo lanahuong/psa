@@ -122,8 +122,6 @@ class Repository:
             frame = {"name": name, "num": sim["t"], "phi": binwave}
             db["Frames"].insert_one(frame)
 
-            print("Frame added to %s" % (name))
-
         except pymongo.errors.OperationFailure as e:
             print("ERROR: %s" % (e))
 
