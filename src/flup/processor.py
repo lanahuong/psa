@@ -139,7 +139,9 @@ def postprocessing(args):
             y,
             z,
             pointData={
-                "N": np.asarray(f.real, order="C").reshape((nx, ny, 1), order="C")
+                "N": np.asarray(np.absolute(f), order="C").reshape(
+                    (nx, ny, 1), order="C"
+                )
             },
         )
         print("%s.vtr generated" % (filename))
