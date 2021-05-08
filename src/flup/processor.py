@@ -190,7 +190,7 @@ def preprocessing(args):
     if "image" in field_desc:
         image_path = field_desc["image"]
 
-        field = load_image(image_path)
+        field = field_desc["scale"] * load_image(image_path)
 
     elif "formula" in field_desc:
         field = field_desc["formula"] * np.ones(field_desc["nbSegments"])
