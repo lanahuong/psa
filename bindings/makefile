@@ -1,4 +1,4 @@
-all: install
+all: package
 
 install: package
 	python3 setup.py install --user

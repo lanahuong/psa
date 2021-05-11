@@ -10,9 +10,9 @@ SCRAVAGLIERI Lana
 
 ## Presentation
 
-This solver is composed of 2 programs the solver `flus` and the processor `flup`.
+This solver is composed of 2 programs: the solver `flus` and the processor `flup`.
 
-The processor is used to create and field of potential and the wave at time t=0,
+The processor is used to create a field of potential, and the wave at time t=0,
 monitor the solver, visualize results of a simulation and initialize or reset the database.
 
 The solver computes the wave at each time step using the previous wave.
@@ -32,10 +32,14 @@ The solver computes the wave at each time step using the previous wave.
 After installing the requirements, create a MongoDB database called `flu_db` and
 a user of the database with the "readWrite" role called `flu` with password `flupwd`.
 
-```db.createUser(
-{	user: "flu",
+```db.createUser({	
+    user: "flu",
 	pwd: "flupwd",
-	roles:[{role: "readWrite" , db:"flu_db"}]})
+	roles:[{
+	    role: "readWrite", 
+	    db:"flu_db"
+	}]
+})
 ```
 
 If you wish to use other names and password you will need to change the
@@ -47,10 +51,11 @@ You can now initialize the database by running from the root of the project :
 exec/flup init
 ```
 
-In `binding/` generate the bindings with :
+In `bindings/` generate and install the bindings with :
 
 ``` sh
 make
+make install
 ```
 
 ## Usage
@@ -65,12 +70,12 @@ exec/flup new path/to/myfile.json
 
 You need give a unique name to your simulation.
 
-If you are just playing with the initial state of your simulation you can run the above command as much as you want and
+If you are just playing with the initial state of your simulation you can run the above command as much as you want, and
 the simulation will simply be updated.
 
 ### Visualise a simulation
 
-To see your simulation in Paraview, you need to generate the VTR files. Use the command :
+To see your simulation in ParaView, you need to generate the VTR files. Use the command :
 
 ```sh
 exec/flup visual sim_name
@@ -97,6 +102,8 @@ exec/flup visual gaus -f 50 -l 250
 
 You can use this while the simulation is running to check results, only generate new frames with `-f`.
 
+The files are stored in a folder at the root of the project. The folder names starts with the name of your simulation and is suffixed with `_vtr`. 
+
 ### List simulations
 
 You can list the simulations in the database with both `flup` and `flus` :
@@ -115,10 +122,13 @@ exec/flus start sim_name -n 100
 ```
 
 Other parameters can be customized :
-- time pace in fs with `-dt`, default is 100 fs
+- time pace in fs with `-dt`, default is 100fs
 - time supersampling with `-s`, default is 20
 - the scheme used by the solver with `-m`, choose from `ctcs ftcs btcs`, default is ctcs
  
+The supersampling factor allows to increase the simulation precision by reducing the effective time interval used in the solver. With less precise methods such as FTCS
+you need to set it to at least 200 to have good results, with the default time pace of 100fs.
+
 ## Examples
 
 You can try to run examples located in `examples/`.
