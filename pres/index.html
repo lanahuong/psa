@@ -145,7 +145,7 @@ VIIIDE
 ---
 # 3.1 Interface du solveur
 
-Compagnon du préprocesseur `flup`, mêmes fichiers de configuration pour la base de données
+Solveur `flus`, compagnon du préprocesseur `flup`, mêmes fichiers de configuration pour la base de données
 
 --
 
@@ -154,11 +154,11 @@ On lance une (re)simulation avec
 
 --
 
-* On passe l'intervalle temporel voulu avec `-dt`.
+* On passe l'intervalle temporel voulu avec `-dt T` en fs.
 
 --
 
-* Possibilité d'utiliser un `supersampling` temporel avec `-s`
+* Possibilité d'utiliser un `supersampling` temporel avec `-s N`
 
 --
 
@@ -166,8 +166,12 @@ On lance une (re)simulation avec
 
 
 ---
+class: top
+# 3.2 Fonctionnement du solveur
 
-# 3.2 Fonctionnement du solveur/backend C++
+- Package python `cd bindings; make && make install`.
+
+--
 
 - Bindings avec Python et dévérouillage du GIL. 
 
@@ -196,9 +200,8 @@ double get_step();
 
 --
 
-- Tests implémentés `$$\forall t, \iint \psi^*(x,y,t).\psi(x,y,t)\,dx\,dy = \iint \psi_0^*(x,y).\psi_0(x,y)\,dx\,dy = 1.$$`
-
-
+- Tests implémentés `$$\forall t, \iint \psi^*(x,y,t).\psi(x,y,t)\,dx\,dy = \iint \psi_0^*(x,y).\psi_0(x,y)\,dx\,dy = 1.$$` 
+- Cohérence entre les différents schémas.
 
 ---
 
