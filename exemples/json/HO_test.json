@@ -2,13 +2,13 @@
   "name": "ho",
   "field" : {
     "formula" : 0,
-    "dimensions" : [15,15],
-    "nbSegments" : [500,500]
+    "dimensions" : [20,20],
+    "nbSegments" : [256,256]
   },
   "wave" : {
     "type" : "HO",
     "Width"  : 10,
-    "Harmo" : [2,3],
+    "Harmo" : [1,1],
     "AnguFreq" : 1000
   }
 }
