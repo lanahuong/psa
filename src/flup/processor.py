@@ -48,6 +48,13 @@ def parse():
         help="name identifier of a simulation to visualise",
     )
     parser_visual.add_argument(
+        "-r",
+        action="store_const",
+        const=True,
+        default=False,
+        help="visualise real part instead of module",
+    )
+    parser_visual.add_argument(
         "-f", type=int, help="first frame to export to vtk visualize"
     )
     parser_visual.add_argument(
@@ -132,19 +139,33 @@ def postprocessing(args):
     if args.p == True:
         return
 
-    for i, f in enumerate(sim["frames"]):
-        filename = "%s_frame%04d" % (args.name, i + minframe)
-        gridToVTK(
-            filename,
-            x,
-            y,
-            z,
-            pointData={
-                "N": np.asarray(np.absolute(f), order="C").reshape(
-                    (nx, ny, 1), order="C"
-                )
-            },
-        )
+    if args.r:
+        for i, f in enumerate(sim["frames"]):
+            filename = "%s_frame%04d" % (args.name, i + minframe)
+            gridToVTK(
+                filename,
+                x,
+                y,
+                z,
+                pointData={
+                    "N": np.asarray(f.real, order="C").reshape((nx, ny, 1), order="C")
+                },
+            )
+    else:
+        for i, f in enumerate(sim["frames"]):
+            filename = "%s_frame%04d" % (args.name, i + minframe)
+            gridToVTK(
+                filename,
+                x,
+                y,
+                z,
+                pointData={
+                    "N": np.asarray(np.absolute(f), order="C").reshape(
+                        (nx, ny, 1), order="C"
+                    )
+                },
+            )
+
     print("%s_frame[%d-%d].vtr generated" % (args.name, minframe, maxframe))
 
 
