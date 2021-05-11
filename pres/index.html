@@ -61,12 +61,12 @@ class: toc top
 
 ---
 
-# Organisation du projet
+# 1.1 Organisation du projet
 
 ![](image/deck.png)
 
 ---
-# Arborescence
+# 1.2 Arborescence
 ```
 .
 ├── AUTHORS
@@ -76,30 +76,31 @@ class: toc top
 │  └── Doxyfile
 ├── gtest
 ├── Makefile
-├── obj
 ├── pres
 ├── README.md
 ```
 
 
 ---
-# Arborescence
+# 1.2 Arborescence
 
 
 ```
 .
 ├── exec
 │  └── flup -> ../src/flup/preprocessor.py
+│  └── flus -> ../src/flus/solver.py
 ├── exemples
+│  ├── young.png
 │  ├── field.png
 │  └── json
 │     └── gaussien_in_null_field.json
+│     └── HO_test.json
+│     └── young-splits.json
 ├── src
-│  ├── db-config.json
 │  ├── flup
 │  │  ├── gaussian.py
-│  │  ├── HO.cpp
-│  │  ├── HO.h
+│  │  ├── HO.py
 │  │  ├── picture_loader.py
 │  │  └── preprocessor.py
 │  ├── flus
@@ -112,14 +113,16 @@ class: toc top
 │  │  ├── SchemeFTCS.h
 │  │  ├── Solver.cpp
 │  │  ├── Solver.h
-│  │  └── Solver.i
+│  │  └── solver.py
 │  └── utils
 │     └── Repository.py
+│     └── db-config.json
 └── tests
    ├── modules
    ├── TestSchemeBTCS.cpp
    ├── TestSchemeCTCS.cpp
-   └── TestSchemeFTCS.cpp```
+   └── TestSchemeFTCS.cpp
+   └── TestSchemeIntra.cpp```
 
 ---
 class: top
