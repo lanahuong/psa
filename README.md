@@ -35,6 +35,11 @@ If you wish to use other names and password you will need to change the
 `src/db-config.json` file accordingly.
 
 You can now initilize the database by running from the root of the project :
+```db.createUser(
+{	user: "flu",
+	pwd: "flupwd",
+	roles:[{role: "readWrite" , db:"flu_db"}]})
+```
 
 ``` sh
 exec/flup init
