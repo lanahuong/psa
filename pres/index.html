@@ -143,11 +143,16 @@ VIIIDE
 VIIIDE
 
 ---
-class: top
-# 3.1 Fonctionnement du solveur
+# 3.1 Interface du solveur
+
+Compagnon du préprocesseur `flup`, mêmes fichiers de configuration pour la base de données
+
+--
 
 On lance une (re)simulation avec 
 `exec/flus start -n N 'jobName' `
+
+--
 
 * On passe l'intervalle temporel voulu avec `-dt`.
 
@@ -160,12 +165,40 @@ On lance une (re)simulation avec
 * Toutes les frames sont stockées dans mongoDB
 
 
-
 ---
 
-# 3.2 Relancer une simulation
+# 3.2 Fonctionnement du solveur/backend C++
 
-VIIIDE
+- Bindings avec Python et dévérouillage du GIL. 
+
+--
+
+- Un interface pour minimiser les transferts de données
+
+--
+
+- Calcul sur des matrices normélisées pour réduire l'erreur numérique
+
+```{C++}
+class Solver {
+
+Solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx, double dy, double dt);
+
+void step();
+void step_n(int n);
+
+arma::cx_mat get_phitdt();
+double get_norm();
+double get_step();
+}
+
+``` 
+
+--
+
+- Tests implémentés `$$\forall t, \iint \psi^*(x,y,t).\psi(x,y,t)\,dx\,dy = \iint \psi_0^*(x,y).\psi_0(x,y)\,dx\,dy = 1.$$`
+
+
 
 ---
 
@@ -229,43 +262,6 @@ class: top
 `flup new -n "MaSimul" json_file`
 
 ---
-class: top
-# 2. Solveur
-
-- Minimiser l'utilisation des bindings Python-C++ pour transférer les données. 
-
---
-
-- Appriximation de la solution l'équation de Schrödinger, ici `$\psi = \psi(x, y, y)$`  `$$i\hbar\frac{\partial}{\partial t}\psi = -\frac{\hbar^2}{2m} \frac{\partial^2 \psi}{\partial^2 x} -\frac{\hbar^2}{2m} \frac{\partial^2 \psi}{\partial^2 y} + \hat{V} \psi$$`
-
---
-
-- Avantage : Unique équation à résoudre -> schémas compilés
-
-`$$ \psi(t+dt) = F(\psi(t)) $$ `
-
---
-
-```{C++}
-class Solver {
-
-/* Constructeur */
-Solver(const arma::cx_mat &phi_0, const arma::mat &pot, double dx, double dy, double dt);
-
-/* Pour avancer de dt, à implémenter par les différents solveurs */
-virtual void step() = 0;
-
-/* Etat */
-arma::cx_mat phitdt;
-
-}
-
-``` 
-
---
-
-- Tests implémentés `$$\forall t, \iint \psi^*(x,y,t).\psi(x,y,t)\,dx\,dy = \iint \psi_0^*(x,y).\psi_0(x,y)\,dx\,dy = 1.$$`
-
 
 ---
 
