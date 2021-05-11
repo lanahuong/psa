@@ -7,9 +7,9 @@ module1 = Extension(
     "_flus",
     include_dirs=["./include/armanpy/", numpy.get_include(), get_python_inc()],
     libraries=["m", "z", "armadillo"],
-    extra_compile_args=["-Ofast", "-march=native", "-mtune=native",
+    extra_compile_args=["-Ofast", "-march=native", "-mtune=native", "-fopenmp", "-larmadillo",
                         "-Wno-delete-non-virtual-dtor", "-Wno-missing-field-initializers", "-Wno-deprecated-declarations"], #silencing swig warnings
-    extra_link_args=["-larmadillo"],
+    extra_link_args=["-fopenmp", "-larmadillo"], #for ARMADILLO
     sources=[
         "flus.i",
         "../src/flus/SchemeFTCS.cpp",
