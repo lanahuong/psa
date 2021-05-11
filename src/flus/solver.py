@@ -41,6 +41,10 @@ def parse():
         "-n", type=int, required=True, help="number of simulation frames to compute"
     )
 
+    parser_start.add_argument(
+        "-s", type=int, default=20, help="supersampling, default is 20"
+    )
+
     parser_start.set_defaults(func=solve)
 
     args = parser.parse_args()
@@ -53,7 +57,6 @@ def parse():
 # Compute th simulation with given arguments
 def solve(args):
     repo = Repository.Repository()
-    supersampling = 20
     sim = repo.start_simulation(args.name, args.method, args.dt)
 
     if args.n <= sim["t"]:
@@ -69,7 +72,7 @@ def solve(args):
             np.asfortranarray(sim["field"]),
             dx,
             dy,
-            args.dt / supersampling,
+            args.dt / args.s,
         )
     elif sim["method"] == "ftcs":
         solver = flus.SchemeFTCS(
@@ -77,7 +80,7 @@ def solve(args):
             np.asfortranarray(sim["field"]),
             dx,
             dy,
-            args.dt / supersampling,
+            args.dt / args.s,
         )
     elif sim["method"] == "btcs":
         solver = flus.SchemeBTCS(
@@ -85,14 +88,14 @@ def solve(args):
             np.asfortranarray(sim["field"]),
             dx,
             dy,
-            args.dt / supersampling,
+            args.dt / args.s,
         )
     else:
         sys.exit("Not a valid scheme")
     print("Solver initialized")
 
     for _ in range(args.n - sim["t"]):
-        solver.step_n(supersampling)
+        solver.step_n(args.s)
         repo.add_frame(args.name, np.asarray(solver.get_phitdt()))
     print("Finished")
 
