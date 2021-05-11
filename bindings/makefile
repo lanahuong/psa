@@ -5,7 +5,7 @@ install: package
 
 
 package:
-	CPPFLAGS="-Wall -Wextra -Wno-delete-non-virtual-dtor -Wno-missing-field-initializers" python3 setup.py build
+	python3 setup.py build
 
 
 clean:
