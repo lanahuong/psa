@@ -145,7 +145,7 @@ VIIIDE
 ---
 # 3.1 Interface du solveur
 
-Solveur `flus`, compagnon du préprocesseur `flup`, mêmes fichiers de configuration pour la base de données
+Solveur `flus`, compagnon du préprocesseur `flup`, pouvant être installé sur une autre machine.
 
 --
 
@@ -207,7 +207,15 @@ double get_step();
 
 # 3.3 Monitoring
 
-VIIIDE
+- Le monitoring s'effectue par le biais de la base de données, à partie du client `flup`
+
+-- 
+
+- `flup visual name` permet de récupérer l'avement du solveur 
+
+--
+
+`exec/flup visual name -f num`
 
 ---
 
