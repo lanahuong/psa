@@ -20,11 +20,11 @@ protected:
     double phi_norm_ = 1; // The value to get back the real phi as we normalise the phi matrix internally to deal with values close to 1.
     const double step_scale_ = 1e-15; // femto, depends ont the inputs, shouldn't be changed without changing the FRONTEND!!!!
 
-    const double m_e_ = arma::datum::m_e;     // Put here whatever suits you
-    const double h_bar_ = arma::datum::h_bar / step_scale_; // Put here whatever suits you
+    const double m_e_ = arma::datum::m_e;
+    const double h_bar_ = arma::datum::h_bar;
 
-    const double m_e_scale_ = 1;//arma::datum::m_e / m_e_; // Deduced automatically
-    const double h_bar_scale_ = 1;// arma::datum::h_bar / h_bar_;
+    const double m_e_scale_ = 1;//arma::datum::m_e / m_e_; // UNUSED, but Deduced automatically
+    const double h_bar_scale_ = 1;// arma::datum::h_bar / h_bar_; //UNUSED
 
     /**
      * Everytime the step() function is called, this state (at t) is updated and

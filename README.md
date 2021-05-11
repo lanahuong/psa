@@ -1,4 +1,4 @@
-# Advanced scientific programming project : 2D-FD solver for the the time-dependent non-relativistic Schrödinger equation
+donc# Advanced scientific programming project : 2D-FD solver for the the time-dependent non-relativistic Schrödinger equation
 
 ## Authors
 
@@ -35,6 +35,11 @@ If you wish to use other names and password you will need to change the
 `src/db-config.json` file accordingly.
 
 You can now initilize the database by running from the root of the project :
+```db.createUser(
+{	user: "flu",
+	pwd: "flupwd",
+	roles:[{role: "readWrite" , db:"flu_db"}]})
+```
 
 ``` sh
 exec/flup init
@@ -54,4 +59,15 @@ You can specify a name for your simulation to find it more easily.
 
 ``` sh
 exec/flup new path/to/myfile.json -n "My simulation"
+```
+
+Then you can run the simulation with 
+ ```sh 
+exec/flus run -n 100 "My simulation"
+ ```
+where 100 represents the number of frames to produce (which is not necessarily the number of steps the solver will compute). 
+
+Finally export the vtk files with 
+```
+exec/flup visual "My simulation"
 ```
