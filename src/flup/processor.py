@@ -117,6 +117,11 @@ def postprocessing(args):
     z = np.linspace(0.0, 1.0, 1, dtype=np.float64)
     t = np.linspace(0, 2 * np.pi, nt, dtype=np.float64)
 
+    dirname = args.name + "_vtr"
+    path = pathlib.Path(dirname)
+    if not path.is_dir():
+        path.mkdir()
+
     filename = "%s_potential" % args.name
     gridToVTK(
         filename,
@@ -133,7 +138,7 @@ def postprocessing(args):
         return
 
     for i, f in enumerate(sim["frames"]):
-        filename = "%s_frame%04d" % (args.name, i + minframe)
+        filename = dirname + "/%s_frame%04d" % (args.name, i + minframe)
         gridToVTK(
             filename,
             x,
