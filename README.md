@@ -60,3 +60,14 @@ You can specify a name for your simulation to find it more easily.
 ``` sh
 exec/flup new path/to/myfile.json -n "My simulation"
 ```
+
+Then you can run the simulation with 
+ ```sh 
+exec/flus run -n 100 "My simulation"
+ ```
+where 100 represents the number of frames to produce (which is not necessarily the number of steps the solver will compute). 
+
+Finally export the vtk files with 
+```
+exec/flup visual "My simulation"
+```
